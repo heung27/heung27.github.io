@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 타임리프 개념
+title: Thymeleaf
 date: 2022-02-10 14:41 +0900
 categories: [Server, Spring]
 tags: [Thymeleaf, Spring, Backend, Web]
