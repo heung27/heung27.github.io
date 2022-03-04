@@ -87,7 +87,7 @@ public interface CustomInterface<T> {
 
 오해하지 말자. 
 
-**함수형 인터페이스는 '추상' 메서드가 하나이다.**  `default method` 또는 `static method` 는 여러 개 존재해도 상관 없다. 위의 예제에서는 `call` 이라는 `abstract method`가 하나 그리고 `default method`와 `static method`가 하나씩 선언 되었다.
+**함수형 인터페이스는 '추상' 메서드가 하나이다.**  default method 또는 static method 는 여러 개 존재해도 상관 없다. 위의 예제에서는 `call` 이라는 abstract method가 하나 그리고 default method와 static method가 하나씩 선언 되었다.
 
 <br>
 
@@ -140,7 +140,7 @@ public interface Supplier<T> {
 }
 ```
 
-`Supplier`는 매개변수를 가지지 않고 반환값이 `T` 타입의 객체인 추상 메서드 `get`이 정의되어 있다.
+Supplier는 매개변수를 가지지 않고 반환값이 `T` 타입의 객체인 추상 메서드 `get`이 정의되어 있다.
 
 
 
@@ -180,9 +180,9 @@ public interface Consumer<T> {
 
 ```
 
-`Consumer`는 매개변수로 `T` 타입의 객체를 가지고 반환값은 없는 추상 메서드 `accept`가 정의되어 있다.
+Consumer는 매개변수로 `T` 타입의 객체를 가지고 반환값은 없는 추상 메서드 `accept`가 정의되어 있다.
 
-또한 `andThen`이라는 `efault method`를 제공하고 있다. 이는 하나의 `Consumer`가 처리된 후 연쇄적으로 다음 `Consumer`가 동작하게 한다. 
+또한 `andThen`이라는 default method를 제공하고 있다. 이는 하나의 Consumer가 처리된 후 연쇄적으로 다음 Consumer가 동작하게 한다. 
 
 
 
@@ -200,7 +200,7 @@ Hello Consumer
 */
 ```
 
-먼저 `accept`를 통해 전달받은 인자로 `consumer`를 처리하고, 다음으로 두 번째 `Consumer`인 `after`를 처리한다. 
+먼저 `accept`를 통해 전달받은 인자로 `consumer`를 처리하고, 다음으로 두 번째 Consumer인 `after`를 처리한다. 
 
 <br>
 
@@ -232,13 +232,13 @@ public interface Function<T, R> {
 }
 ```
 
-`Function`은 매개변수로 `T` 타입의 객체를 가지고 반환값이 `R` 타입 객체인 `apply`가 정의되어 있다.
+Function은 매개변수로 `T` 타입의 객체를 가지고 반환값이 `R` 타입 객체인 `apply`가 정의되어 있다.
 
-`Consumer`와 마찬가지로 `andThen`이 제공되고, 추가적으로 `compose`와 `identity`가 제공된다.
+Consumer와 마찬가지로 `andThen`이 제공되고, 추가적으로 `compose`와 `identity`가 제공된다.
 
-`compose`는 `andThen`과 반대로, 첫 번째 `Function`이 실행되기 이전에 인자로 받은 `Function`을 먼저 처리한다.
+`compose`는 `andThen`과 반대로, 첫 번째 Function이 실행되기 이전에 인자로 받은 Function을 먼저 처리한다.
 
-`identity`는 자기 자신을 반환하는 `static method`이다.
+`identity`는 자기 자신을 반환하는 static method이다.
 
 
 
@@ -257,9 +257,9 @@ System.out.println(result);
 */
 ```
 
-`compose`를 통해 첫 번째 `function`이 처리되기 전에 `before`가 먼저 처리된다. (`Hello Function` => `Hello`)
+`compose`를 통해 첫 번째 `function`이 처리되기 전에 `before`가 먼저 처리된다. (Hello Function => Hello)
 
-다음으로 `function`이 실행되고, 마지막으로 `andThen`으로 받은 `after`가 처리된다. (`Hello` => `5` => `25`)
+다음으로 `function`이 실행되고, 마지막으로 `andThen`으로 받은 `after`가 처리된다. (Hello => 5 => 25)
 
 <br>
 
@@ -303,7 +303,7 @@ public interface Predicate<T> {
 }
 ```
 
-`Predicate`는 매개변수로 `T` 타입의 객체를 가지고 반환값으로 `boolean`을 반환하는 `test`가 정의되어 있다.
+Predicate는 매개변수로 `T` 타입의 객체를 가지고 반환값으로 `boolean`을 반환하는 `test`가 정의되어 있다.
 
 추가적으로 `and`, `negate`, `or`, `isEqual`, `not`을 제공한다. 각 메서드는 논리 연산과 비교 연산을 구현하고 있다. 
 
@@ -326,7 +326,7 @@ true
 */
 ```
 
-`test`를 통해 `10`과 `5`를 비교하고 `and` 연산과 `or` 연산을 적용해 보았다.
+`test`를 통해 10과 5를 비교하고 `and` 연산과 `or` 연산을 적용해 보았다.
 
 <br>
 
