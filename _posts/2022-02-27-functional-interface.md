@@ -87,7 +87,7 @@ public interface CustomInterface<T> {
 
 오해하지 말자. 
 
-**함수형 인터페이스는 '추상' 메서드가 하나이다.**  `default method` 또는 `static method` 는 여러 개 존재해도 상관 없다. 위의 예제에서는 call 이라는 `abstract method`가 하나 그리고 `default method`와 `static method`가 하나씩 선언 되었다.
+**함수형 인터페이스는 '추상' 메서드가 하나이다.**  `default method` 또는 `static method` 는 여러 개 존재해도 상관 없다. 위의 예제에서는 `call` 이라는 `abstract method`가 하나 그리고 `default method`와 `static method`가 하나씩 선언 되었다.
 
 <br>
 
@@ -100,7 +100,7 @@ System.out.println(func.call());
 func.printDefault();
 CustomInterface.printStatic();
 
-/* 실행결과
+/* 실행 결과
 It is abstract method
 It is default method
 It is static method
@@ -122,47 +122,218 @@ It is static method
 - Function\<T, R>
 - Predicate\<T>
 
-이외에도 다양한 함수형 인터페이스가 제공된다. [java.util.function](https://docs.oracle.com/javase/8/docs/api/java/util/function/package-summary.html) 패키지에 정의되어 있으니 참고하자.
+이외에도 다양한 함수형 인터페이스가 제공된다. 자세한 정보는 패키지 [java.util.function](https://docs.oracle.com/javase/8/docs/api/java/util/function/package-summary.html)에 정의되어 있다.
 
 <br>
 
-이제 위의 함수형 인터페이스를 하나씩 살펴보자.
+이제 위의 함수형 인터페이스를 하나씩 살펴보자. 아래의 코드들은 실제 구현되어 있는 코드이다.
 
 ### 1. Supplier\<T>
 
 ```java
+package java.util.function;
 
+@FunctionalInterface
+public interface Supplier<T> {
+  
+    T get();
+}
 ```
 
+`Supplier`는 매개변수를 가지지 않고 반환값이 `T` 타입의 객체인 추상 메서드 `get`이 정의되어 있다.
 
+
+
+#### 사용 예시
+
+```java
+Supplier<String> supplier = () -> "Hello Supplier";
+
+System.out.println(supplier.get());
+
+/* 실행 결과
+Hello Supplier
+*/
+```
+
+공급자라는 이름처럼 아무런 인자를 받지 않고 특정 객체를 리턴한다.
+
+<br>
 
 ### 2. Consumer\<T>
 
 ```java
+package java.util.function;
+
+import java.util.Objects;
+
+@FunctionalInterface
+public interface Consumer<T> {
+  
+    void accept(T t);
+
+    default Consumer<T> andThen(Consumer<? super T> after) {
+        Objects.requireNonNull(after);
+        return (T t) -> { accept(t); after.accept(t); };
+    }
+}
+
 ```
 
+`Consumer`는 매개변수로 `T` 타입의 객체를 가지고 반환값은 없는 추상 메서드 `accept`가 정의되어 있다.
 
+또한 `andThen`이라는 `efault method`를 제공하고 있다. 이는 하나의 `Consumer`가 처리된 후 연쇄적으로 다음 `Consumer`가 동작하게 한다. 
+
+
+
+#### 사용 예시
+
+```java
+Consumer<String> consumer = str -> System.out.println(str.split(" ")[0]);
+Consumer<String> after = str -> System.out.println(str);
+
+consumer.andThen(after).accept("Hello Consumer");
+
+/* 실행 결과
+Hello
+Hello Consumer
+*/
+```
+
+먼저 `accept`를 통해 전달받은 인자로 `consumer`를 처리하고, 다음으로 두 번째 `Consumer`인 `after`를 처리한다. 
+
+<br>
 
 ### 3. Function\<T, R>
 
 ```java
+package java.util.function;
+
+import java.util.Objects;
+
+@FunctionalInterface
+public interface Function<T, R> {
+
+    R apply(T t);
+
+    default <V> Function<V, R> compose(Function<? super V, ? extends T> before) {
+        Objects.requireNonNull(before);
+        return (V v) -> apply(before.apply(v));
+    }
+
+    default <V> Function<T, V> andThen(Function<? super R, ? extends V> after) {
+        Objects.requireNonNull(after);
+        return (T t) -> after.apply(apply(t));
+    }
+
+    static <T> Function<T, T> identity() {
+        return t -> t;
+    }
+}
 ```
 
+`Function`은 매개변수로 `T` 타입의 객체를 가지고 반환값이 `R` 타입 객체인 `apply`가 정의되어 있다.
 
+`Consumer`와 마찬가지로 `andThen`이 제공되고, 추가적으로 `compose`와 `identity`가 제공된다.
+
+`compose`는 `andThen`과 반대로, 첫 번째 `Function`이 실행되기 이전에 인자로 받은 `Function`을 먼저 처리한다.
+
+`identity`는 자기 자신을 반환하는 `static method`이다.
+
+
+
+#### 사용 예시
+
+```java
+Function<String, Integer> function = str -> str.length();
+Function<String, String> before = str -> str.split(" ")[0];
+Function<Integer, Integer> after = num -> num * num;
+
+int result = function.compose(before).andThen(after).apply("Hello Function");
+System.out.println(result);
+
+/* 실행 결과
+25
+*/
+```
+
+`compose`를 통해 첫 번째 `function`이 처리되기 전에 `before`가 먼저 처리된다. (`Hello Function` => `Hello`)
+
+다음으로 `function`이 실행되고, 마지막으로 `andThen`으로 받은 `after`가 처리된다. (`Hello` => `5` => `25`)
+
+<br>
 
 ### 4. Predicate\<T>
 
 ```java
+package java.util.function;
+
+import java.util.Objects;
+
+@FunctionalInterface
+public interface Predicate<T> {
+
+    boolean test(T t);
+
+    default Predicate<T> and(Predicate<? super T> other) {
+        Objects.requireNonNull(other);
+        return (t) -> test(t) && other.test(t);
+    }
+
+    default Predicate<T> negate() {
+        return (t) -> !test(t);
+    }
+
+    default Predicate<T> or(Predicate<? super T> other) {
+        Objects.requireNonNull(other);
+        return (t) -> test(t) || other.test(t);
+    }
+
+    static <T> Predicate<T> isEqual(Object targetRef) {
+        return (null == targetRef)
+                ? Objects::isNull
+                : object -> targetRef.equals(object);
+    }
+
+    @SuppressWarnings("unchecked")
+    static <T> Predicate<T> not(Predicate<? super T> target) {
+        Objects.requireNonNull(target);
+        return (Predicate<T>)target.negate();
+    }
+}
 ```
 
+`Predicate`는 매개변수로 `T` 타입의 객체를 가지고 반환값으로 `boolean`을 반환하는 `test`가 정의되어 있다.
 
+추가적으로 `and`, `negate`, `or`, `isEqual`, `not`을 제공한다. 각 메서드는 논리 연산과 비교 연산을 구현하고 있다. 
+
+
+
+#### 사용 예시
+
+```java
+Predicate<Integer> isBiggerThanFive = num -> num > 5;
+Predicate<Integer> isLowerThanFive = num -> num < 5;
+
+boolean result1 = isBiggerThanFive.and(isLowerThanFive).test(10);
+boolean result2 = isBiggerThanFive.or(isLowerThanFive).test(10);
+System.out.println(result1);
+System.out.println(result2);
+
+/* 실행 결과
+false
+true
+*/
+```
+
+`test`를 통해 `10`과 `5`를 비교하고 `and` 연산과 `or` 연산을 적용해 보았다.
 
 <br>
 
 ## Refference
 
-- https://mangkyu.tistory.com/113
-- https://zzang9ha.tistory.com/303
-- https://bcp0109.tistory.com/313
-- https://codechacha.com/ko/java8-functional-interface/
-- https://jeong-pro.tistory.com/23
+- [https://mangkyu.tistory.com/113](https://mangkyu.tistory.com/113)
+- [https://zzang9ha.tistory.com/303](https://zzang9ha.tistory.com/303)
+- [https://bcp0109.tistory.com/313](https://bcp0109.tistory.com/313)
+- [https://codechacha.com/ko/java8-functional-interface/](https://codechacha.com/ko/java8-functional-interface/)
+- [https://jeong-pro.tistory.com/23](https://jeong-pro.tistory.com/23)
