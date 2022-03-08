@@ -181,6 +181,12 @@ Stream<String> fileStream = Files.lines(Paths.get("test.txt"), StandardCharsets.
 
 #### filter
 
+Stream에서 조건에 맞지 않는 데이터를 걸려내 데이터를 정제하는 메서드이다. 인자로 boolean을 리턴하는 함수형 인터페이스 Predicate를 받는다.
+
+```java
+Stream<T> filter(Predicate<? super T> predicate);
+```
+
 ```java
 List<Integer> integers = Arrays.asList(1, 2, 3, 4, 5);
 
@@ -195,7 +201,19 @@ integers.stream()
 */
 ```
 
+1부터 5까지의 숫자 리스트에서 3이상의 숫자를 필터링했다.
+
+
+
 #### map
+
+Stream의 각 요소들에 동일한 연산을 적용하는 메서드이다. 인자로 각 요소들에 적용할 연산인 함수형 인터페이스 Function을 받는다.
+
+Stream에 들어가 있는 값이 특정 로직을 거친 후 새로운 스트림에 담기게 되는데, 이러한 작업을 맵핑(*mapping*)이라고 한다.
+
+```java
+<R> Stream<R> map(Function<? super T, ? extends R> mapper);
+```
 
 ```java
 List<Integer> integers = Arrays.asList(1, 2, 3, 4, 5);
@@ -213,7 +231,18 @@ integers.stream()
 */
 ```
 
+1부터 5까지의 숫자 리스트에서 각 요소에 * 2를 적용했다.
+
+
+
 #### sorted
+
+Stream의 요소들을 정렬하는 메서드이다. 인자로 정렬 방법을 지정하는 함수형 인터페이스 Comparator를 받는다. 그리고 인자를 받지 않을 수도 있는데, 이때 정렬은 오름차순이 된다.
+
+```java
+Stream<T> sorted();
+Stream<T> sorted(Comparator<? super T> comparator);
+```
 
 ````java
 List<Integer> integers = Arrays.asList(1, 2, 3, 4, 5);
@@ -231,7 +260,17 @@ integers.stream()
 */
 ````
 
+1부터 5까지 오름차순으로 정렬되어 있는 리스트를 준비했다. 여기에 `Comparator.reverseOrder()`를 사용하여 내림차순으로 다시 정렬했다.
+
+
+
 #### distinct
+
+Stream의 요소들에 중복된 데이터가 존재하는 경우, 중복을 제거하는 메서드이다. 
+
+```java
+Stream<T> distinct();
+```
 
 ```java
 List<Integer> integers = Arrays.asList(1, 1, 1, 5, 5);
@@ -246,7 +285,21 @@ integers.stream()
 */
 ```
 
+1이 세 개, 5가 두 개 가지고 있는 리스트를 준비하고, distinct를 수행해 중복 데이터를 제거했다.
+
+여기서 주의해야 할 점이 하나 있다. distinct는 중복 데이터를 검사하기 위해 Object의 equals()를 사용한다. 때문에 우리가 생성한 클래스를 Stream으로 사용한다고 하면, equals()와 hashCode()를 오버라이드 해야만 distinct를 제대로 적용할 수 있다.
+
+
+
 #### peek
+
+Stream에 영향을 주지 않고 각 요소들에 특정 연산을 수행하는 메서드이다. 인자로 함수형 인터페이스 Consumer를 받는다. 
+
+peek라는 단어가 '확인해본다'라는 뜻을 가지고 있는 것처럼, peek 함수는 Stream의 각 요소에 특정 연산을 수행할 뿐 결과에 영향을 주지 않는다. 예를 들어 어떤 Stream의 요소들을 중간에 출력해서 확인하고 싶을때 사용할 수 있다.
+
+```java
+Stream<T> peek(Consumer<? super T> action);
+```
 
 ```java
 IntStream intStream = IntStream.range(1, 5); // 1 ~ 4
@@ -266,7 +319,13 @@ System.out.println(sum);
 */
 ```
 
+1부터 4를 가지는 IntStream의 합계를 계산하는 과정이다. peek 함수를 적용하여 중간값을 출력해 확인하였고, 마지막으로 sum을 적용해 합계를 계산했다.
+
+
+
 #### mapToObj
+
+작업을 하다 보면 일반적인 Stream 객체를 원시 Stream으로 바꾸거나 그 반대의 작업이 필요한 경우가 있다. 이를 위해 일반적인 Stream 객체는 mapToInt(), mapToLong(), mapToDouble()이라는 특수한 Mapping 연산을 지원하고 있으며, 그 반대로 원시객체는 mapToObject를 통해 일반적인 Stream 객체로 바꿀 수 있다.
 
 ```java
 List<Integer> integers = Arrays.asList(1, 2, 3, 4, 5);
@@ -333,8 +392,8 @@ List<String> nameList = userList.stream()
 
 ```java
 String listToString = userList.stream()
-    .map(User::getName)
-    .collect(Collectors.joining(", ", "<", ">"));
+  	.map(User::getName)
+  	.collect(Collectors.joining(", ", "<", ">"));
 ```
 
 ##### 3. Collectors.averagingInt / Collectors.summingInt / Collectors.summarizingInt
@@ -368,10 +427,10 @@ Map<Boolean, List<User>> partition = userList.stream()
 
 ```java
 Set<User> unmodifiableSet = userList.stream()
-    .collect(Collectors.collectingAndThen(
-      Collectors.toSet(),
-      Collections::unmodifiableSet
-    ));
+		.collect(Collectors.collectingAndThen(
+      	Collectors.toSet(),
+				Collections::unmodifiableSet
+		));
 ```
 
 ##### 7. Collector.of
@@ -387,7 +446,7 @@ Collector<User, ?, LinkedList<User>> toLinkedList = Collector.of(
 		);
 
 LinkedList<User> userLinkedList = userList.stream()
-  	.collect(toLinkedList);
+		.collect(toLinkedList);
 ```
 
 
