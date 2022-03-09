@@ -175,9 +175,7 @@ Stream<String> fileStream = Files.lines(Paths.get("test.txt"), StandardCharsets.
 
 ### 2. 가공
 
-원본의 데이터를 별도의 데이터로 가공하기 위한 중간 연산의 단계이다. 
-
-어떤 객체의 Stream을 원하는 형태로 처리할 수 있으며, 중간 연산의 반환값은 Stream이기 때문에 필요한 만큼 중간 연산을 연결하여 사용할 수 있다. 
+원본의 데이터를 별도의 데이터로 가공하기 위한 중간 연산의 단계이다. 어떤 객체의 Stream을 원하는 형태로 처리할 수 있으며, 중간 연산의 반환값은 Stream이기 때문에 필요한 만큼 중간 연산을 연결하여 사용할 수 있다. 
 
 #### filter
 
@@ -207,9 +205,7 @@ integers.stream()
 
 #### map
 
-Stream의 각 요소들에 동일한 연산을 적용하는 메서드이다. 
-
-인자로 각 요소들에 적용할 연산인 함수형 인터페이스 Function을 받는다.
+Stream의 각 요소들에 동일한 연산을 적용하는 메서드이다. 인자로 각 요소들에 적용할 연산인 함수형 인터페이스 Function을 받는다.
 
 Stream에 들어가 있는 값이 특정 로직을 거친 후 새로운 스트림에 담기게 되는데, 이러한 작업을 매핑(mapping)이라고 한다.
 
@@ -239,11 +235,7 @@ integers.stream()
 
 #### sorted
 
-Stream의 요소들을 정렬하는 메서드이다. 
-
-인자로 정렬 방법을 지정하는 함수형 인터페이스 Comparator를 받는다.
-
-인자를 받지 않을 수도 있는데 이때 정렬은 오름차순이 된다.
+Stream의 요소들을 정렬하는 메서드이다. 인자로 정렬 방법을 지정하는 함수형 인터페이스 Comparator를 받는다. 인자를 받지 않을 수도 있는데 이때 정렬은 오름차순이 된다.
 
 ```java
 Stream<T> sorted();
@@ -297,11 +289,9 @@ integers.stream()
 
 <br>
 
-#### peek
+#### <div id="peek">peek</div>
 
-Stream에 영향을 주지 않고 각 요소들에 특정 연산을 수행하는 메서드이다. 
-
-인자로 함수형 인터페이스 Consumer를 받는다. 
+Stream에 영향을 주지 않고 각 요소들에 특정 연산을 수행하는 메서드이다. 인자로 함수형 인터페이스 Consumer를 받는다. 
 
 peek라는 단어가 '엿보다'라는 뜻을 가지고 있는 것처럼, peek 함수는 Stream의 각 요소에 특정 연산을 수행할 뿐 결과에 영향을 주지 않는다. 예를 들어 어떤 Stream의 요소들을 중간에 출력해서 확인하고 싶을 때 사용할 수 있다.
 
@@ -348,7 +338,7 @@ IntStream intStream1 = integers.stream()
 
 가공 단계를 거쳐 만들어진 데이터를 최종적으로 원하는 결과 데이터로 만드는 단계이다. Stream의 요소들을 소모하면서 연산이 수행되기 때문에 한 번만 처리 가능하며, 연산이 끝난 뒤 Stream이 닫히게 된다.
 
-#### calculate
+#### <div id="cal">calculate</div>
 
 Stream 요소들을 대상으로 최대(max), 최소(min), 평균(average), 합(sum), 개수(count)를 구하는 최종 연산들이 있다. 
 
@@ -470,7 +460,7 @@ System.out.println(sum);
 
 User 리스트에서 age를 꺼내 평균과 합을 구했다. 
 
-평균과 합은 위의 calculate(#calculate)을 사용해서 구할 수 있었다. 이 둘은 사용되는 스트림의 타입이 다른데, calculate는 IntStream과 같은 원시 Stream에서 사용하고 collect는 컬렉션 Stream에서 사용한다.  
+평균과 합은 위의 [calculate](#cal)을 사용해서 구할 수 있었다. 이 둘은 사용되는 스트림의 타입이 다른데, calculate는 IntStream과 같은 원시 Stream에서 사용하고 collect는 컬렉션 Stream에서 사용한다.  
 
 ```java
 IntSummaryStatistics statistics = userList.stream()
@@ -489,9 +479,7 @@ IntSummaryStatistics{count=4, sum=111, min=24, average=27.750000, max=31}
 
 ##### 4. Collectors.groupingBy
 
-Stream에서 작업한 결과를 특정 그룹으로 묶는다. 
-
-결과는 Map 타입으로 반환되며, 인자로 함수형 인터페이스 Function을 받는다. 
+Stream에서 작업한 결과를 특정 그룹으로 묶는다. 결과는 Map 타입으로 반환되며, 인자로 함수형 인터페이스 Function을 받는다. 
 
 ```java
 Map<Integer, List<User>> group = userList.stream()
@@ -510,9 +498,7 @@ User 리스트에서 age를 꺼내 나이를 기준으로 그룹을 나눴다. �
 
 ##### 5. Collectors.partitioningBy
 
-Stream에서 작업한 결과를 특정 기준으로 나눈다. 
-
-결과는 Map 타입으로 반환되며, 인자로 함수형 인터페이스 Predicate를 받는다. 
+Stream에서 작업한 결과를 특정 기준으로 나눈다. 결과는 Map 타입으로 반환되며, 인자로 함수형 인터페이스 Predicate를 받는다. 
 
 위의 `Collectors.groupingBy()`은 여러 그룹으로 나눌 수 있지만, `Collectors.partitioningBy()`는 true 또는 false로 나뉘게 된다. 
 
@@ -531,9 +517,7 @@ User 리스트에서 25살 이상인 사람과 그렇지 않은 사람을 나눴
 
 ##### 6. Collectors.collectingAndThen
 
-Stream에서 작업한 결과를 특정 타입으로 collect한 이후에 추가 작업을 지정한다. 
-
-첫 번째 인자로 Collectors를 받아 결과를 만들고, 두 번째 인자로 함수형 인터페이스 Function을 받아 추가 작업을 처리한다.
+Stream에서 작업한 결과를 특정 타입으로 collect한 이후에 추가 작업을 지정한다. 첫 번째 인자로 Collectors를 받아 결과를 만들고, 두 번째 인자로 함수형 인터페이스 Function을 받아 추가 작업을 처리한다.
 
 ```java
 Set<User> unmodifiableSet = userList.stream()
@@ -553,9 +537,7 @@ User 리스트를 Set 타입으로 collect하고, 추가 작업으로 수정 불
 
 #### match
 
-Stream에서 작업한 결과가 특정 조건을 만족하는지 검사한다. 
-
-인자로 함수형 인터페이스 Predicate를 받아, 이를 검사 조건으로 사용한다.
+Stream에서 작업한 결과가 특정 조건을 만족하는지 검사한다. 인자로 함수형 인터페이스 Predicate를 받아, 이를 검사 조건으로 사용한다.
 
 다음과 같은 세 가지 메서드가 있다.
 
@@ -577,11 +559,9 @@ boolean noneMatch = integers.stream().noneMatch(num -> num % 2 == 1); // true
 
 #### forEach
 
-Stream에서 작업한 결과의 모든 요소에 특정 연산을 수행한다. 
+Stream에서 작업한 결과의 모든 요소에 특정 연산을 수행한다. 보통 `System.out.println`을 넘겨 최종 결과를 출력하는 용도로 사용한다. 
 
-보통 `System.out.println`을 넘겨 최종 결과를 출력하는 용도로 사용한다. 
-
-앞에 가공(#가공) 파트에서 살펴본 `peek()`와는 중간 작업과 최종 작업이라는 차이가 있다.
+앞에서 가공 파트에서 살펴본 [peek](#peek) 메서드와는 중간 작업과 최종 작업이라는 차이가 있다.
 
 ```java
 List<Integer> integers = Arrays.asList(1, 2, 3, 4, 5);
