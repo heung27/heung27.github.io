@@ -3,7 +3,7 @@ layout: post
 title: Stream API - 기본
 date: 2022-02-23 22:55 +0900
 categories: [Language, Java]
-tags: [Java 8, Stream API]
+tags: [Java 8, Stream API, Functional Interface, Lambda, Method Reference]
 ---
 
 
@@ -580,7 +580,7 @@ list.stream().forEach(System.out::println);
 
 <br>
 
-## Refference
+## Reference
 
 - [https://mangkyu.tistory.com/112](https://mangkyu.tistory.com/112)
 - [https://futurecreator.github.io/2018/08/26/java-8-streams/](https://futurecreator.github.io/2018/08/26/java-8-streams/)
