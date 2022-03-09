@@ -3,7 +3,7 @@ layout: post
 title: Functional Interface
 date: 2022-02-27 21:50 +0900
 categories: [Language, Java]
-tags: [Java 8, Functional Interface, Abstract Method, Lambda]
+tags: [Java 8, Functional Interface, Abstract Method, Lambda, Method Reference]
 ---
 
 
@@ -330,7 +330,7 @@ true
 
 <br>
 
-## Refference
+## Reference
 
 - [https://mangkyu.tistory.com/113](https://mangkyu.tistory.com/113)
 - [https://zzang9ha.tistory.com/303](https://zzang9ha.tistory.com/303)
