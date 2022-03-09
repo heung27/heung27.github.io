@@ -289,7 +289,7 @@ integers.stream()
 
 <br>
 
-#### <div id="peek">peek</div>
+<h4 id="peek">peek</h4>
 
 Stream에 영향을 주지 않고 각 요소들에 특정 연산을 수행하는 메서드이다. 인자로 함수형 인터페이스 Consumer를 받는다. 
 
@@ -338,7 +338,7 @@ IntStream intStream1 = integers.stream()
 
 가공 단계를 거쳐 만들어진 데이터를 최종적으로 원하는 결과 데이터로 만드는 단계이다. Stream의 요소들을 소모하면서 연산이 수행되기 때문에 한 번만 처리 가능하며, 연산이 끝난 뒤 Stream이 닫히게 된다.
 
-#### <div id="cal">calculate</div>
+<h4 id="cal">calculate</h4>
 
 Stream 요소들을 대상으로 최대(max), 최소(min), 평균(average), 합(sum), 개수(count)를 구하는 최종 연산들이 있다. 
 
