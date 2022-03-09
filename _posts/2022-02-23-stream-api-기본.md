@@ -42,7 +42,9 @@ Stream API는 원본 데이터를 조회하여 원본 데이터가 아닌 별도
 ```java
 List<Integer> list = Arrays.asList(1, 2, 3, 4, 5);
 
-List<Integer> sortedList = list.stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
+List<Integer> sortedList = list.stream()
+  .sorted(Comparator.reverseOrder())
+  .collect(Collectors.toList());
 
 System.out.println(sortedList);
 System.out.println(list);
@@ -168,7 +170,10 @@ LongStream longStream = new Random().longs(5); // 난수 5개 생성
 자바 NIO의 Files 클래스의 `lines()`을 사용하면 해당 파일의 각 라인을 String 타입의 Stream으로 만들 수 있다.
 
 ```java
-Stream<String> fileStream = Files.lines(Paths.get("test.txt"), StandardCharsets.UTF_8);
+Stream<String> fileStream = Files.lines(
+  Paths.get("test.txt"), 
+  StandardCharsets.UTF_8
+);
 ```
 
 <br>
@@ -303,8 +308,8 @@ Stream<T> peek(Consumer<? super T> action);
 IntStream intStream = IntStream.range(1, 5); // 1 ~ 4
 
 int sum = intStream
-  					.peek(System.out::println)
-  					.sum();
+  .peek(System.out::println)
+  .sum();
 
 System.out.println(sum);
 
@@ -329,7 +334,7 @@ System.out.println(sum);
 List<Integer> integers = Arrays.asList(1, 2, 3, 4, 5);
 
 IntStream intStream1 = integers.stream()
-                				.mapToInt(Integer::intValue); // List<Integer> => IntStream
+  .mapToInt(Integer::intValue); // List<Integer> => IntStream
 ```
 
 <br>
@@ -379,11 +384,11 @@ collect 함수는 어떻게 Stream의 요소들을 수집할 것인가를 정의
 
 ```java
 List<User> userList = Arrays.asList(
-    		new User("heung", 28),
-    		new User("woneee", 24),
-    		new User("sun", 28),
-  			new User("bun", 31)
-		);
+  new User("heung", 28),
+  new User("woneee", 24),
+  new User("sun", 28),
+  new User("bun", 31)
+);
 ```
 
 collect에 대한 이해를 돕기 위해 간단한 User class를 만들고 그 List를 준비했다. User는 name(이름), age(나이)를 멤버 변수로 가지고 있다. 
@@ -394,8 +399,8 @@ Stream에서 작업한 결과를 List로 반환한다.
 
 ```java
 List<String> nameList = userList.stream()
-  	.map(User::getName)
-  	.collect(Collectors.toList());
+  .map(User::getName)
+  .collect(Collectors.toList());
 
 System.out.println(nameList);
 
@@ -422,8 +427,8 @@ Stream에서 작업한 결과를 1개의 String으로 이어붙인다.
 
 ```java
 String listToString = userList.stream()
-  	.map(User::getName)
-  	.collect(Collectors.joining(", ", "<", ">"));
+  .map(User::getName)
+  .collect(Collectors.joining(", ", "<", ">"));
 
 System.out.println(listToString);
 
@@ -444,10 +449,10 @@ Stream에서 작업한 결과의 평균과 합을 구한다.
 
 ```java
 Double average = userList.stream()
-  	.collect(Collectors.averagingInt(User::getAge));
+  .collect(Collectors.averagingInt(User::getAge));
 
 Integer sum = userList.stream()
-  	.collect(Collectors.summingInt(User::getAge));
+  .collect(Collectors.summingInt(User::getAge));
 
 System.out.println(average);
 System.out.println(sum);
@@ -464,7 +469,7 @@ User 리스트에서 age를 꺼내 평균과 합을 구했다.
 
 ```java
 IntSummaryStatistics statistics = userList.stream()
-  	.collect(Collectors.summarizingInt(User::getAge));
+  .collect(Collectors.summarizingInt(User::getAge));
 
 System.out.println(statistics);
 
@@ -483,7 +488,7 @@ Stream에서 작업한 결과를 특정 그룹으로 묶는다. 결과는 Map �
 
 ```java
 Map<Integer, List<User>> group = userList.stream()
-  	.collect(Collectors.groupingBy(User::getAge));
+  .collect(Collectors.groupingBy(User::getAge));
 
 System.out.println(group);
 
@@ -504,7 +509,7 @@ Stream에서 작업한 결과를 특정 기준으로 나눈다. 결과는 Map �
 
 ```java
 Map<Boolean, List<User>> partition = userList.stream()
-  	.collect(Collectors.partitioningBy(user -> user.getAge() > 25));
+  .collect(Collectors.partitioningBy(user -> user.getAge() > 25));
 
 /* 실행 결과
 {false=[User{name='woneee', age=24}], true=[User{name='heung', age=28}, User{name='sun', age=28}, User{name='bun', age=31}]}
@@ -521,10 +526,10 @@ Stream에서 작업한 결과를 특정 타입으로 collect한 이후에 추가
 
 ```java
 Set<User> unmodifiableSet = userList.stream()
-		.collect(Collectors.collectingAndThen(
-      	Collectors.toSet(),
-				Collections::unmodifiableSet
-		));
+  .collect(Collectors.collectingAndThen(
+    Collectors.toSet(),
+    Collections::unmodifiableSet
+  ));
 
 /* 실행 결과
 [User{name='bun', age=31}, User{name='heung', age=28}, User{name='woneee', age=24}, User{name='sun', age=28}]
