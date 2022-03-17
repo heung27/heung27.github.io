@@ -122,7 +122,7 @@ Stream API의 연산은 크게 세 단계로 나눌 수 있다. Stream을 생성
 
 Stream 연산을 하기 위해서는 먼저 Stream 객체를 생성해 주어야 한다. 배열, 컬렉션, 임의의 수, 파일 등 거의 모든 것을 가지고 스트림을 생성할 수 있다. 
 
-#### 배열 Stream
+#### 1.1. 배열 Stream
 
 Stream.of 또는 Arrays.stream 메서드를 사용해 생성한다. 
 
@@ -136,7 +136,7 @@ Stream<String> stringStream3 = Arrays.stream(arr, 1, 3); // ["b", "c"]
 
 <br>
 
-#### 컬렉션 Stream
+#### 1.2. 컬렉션 Stream
 
 Collection 인터페이스에는 default method로 `stream()`이 정의되어 있기 때문에, Collection 인터페이스를 구현한 객체들(List, Set 등)은 모두 이 메서드를 이용해 Stream을 생성할 수 있다.
 
@@ -148,7 +148,7 @@ Stream<String> stringStream = list.stream();
 
 <br>
 
-#### 원시 Stream
+#### 1.3. 원시 Stream
 
 위와 같이 객체를 위한 Stream 외에 원시 타입(int, long, double)을 다루기 위한 특수한 Stream도 있다. range 메서드를 통해 값의 범위를 지정해 생성한다.
 
@@ -165,7 +165,7 @@ LongStream longStream = new Random().longs(5); // 난수 5개 생성
 
 <br>
 
-#### 파일 Stream
+#### 1.4. 파일 Stream
 
 자바 NIO의 Files 클래스의 `lines()`을 사용하면 해당 파일의 각 라인을 String 타입의 Stream으로 만들 수 있다.
 
@@ -182,7 +182,7 @@ Stream<String> fileStream = Files.lines(
 
 원본의 데이터를 별도의 데이터로 가공하기 위한 중간 연산의 단계이다. 어떤 객체의 Stream을 원하는 형태로 처리할 수 있으며, 중간 연산의 반환값은 Stream이기 때문에 필요한 만큼 중간 연산을 연결하여 사용할 수 있다. 
 
-#### filter
+#### 2.1. filter
 
 Stream에서 조건에 맞지 않는 데이터를 걸려내 데이터를 정제하는 메서드이다. 인자로 boolean을 리턴하는 함수형 인터페이스 Predicate를 받는다.
 
@@ -208,7 +208,7 @@ integers.stream()
 
 <br>
 
-#### map
+#### 2.2. map
 
 Stream의 각 요소들에 동일한 연산을 적용하는 메서드이다. 인자로 각 요소들에 적용할 연산인 함수형 인터페이스 Function을 받는다.
 
@@ -238,7 +238,7 @@ integers.stream()
 
 <br>
 
-#### sorted
+#### 2.3. sorted
 
 Stream의 요소들을 정렬하는 메서드이다. 인자로 정렬 방법을 지정하는 함수형 인터페이스 Comparator를 받는다. 인자를 받지 않을 수도 있는데 이때 정렬은 오름차순이 된다.
 
@@ -267,7 +267,7 @@ integers.stream()
 
 <br>
 
-#### distinct
+#### 2.4. distinct
 
 Stream의 요소들에 중복된 데이터가 존재하는 경우, 중복을 제거하는 메서드이다. 
 
@@ -294,7 +294,7 @@ integers.stream()
 
 <br>
 
-<h4 id="peek">peek</h4>
+<h4 id="peek">2.5. peek</h4>
 
 Stream에 영향을 주지 않고 각 요소들에 특정 연산을 수행하는 메서드이다. 인자로 함수형 인터페이스 Consumer를 받는다. 
 
@@ -326,7 +326,7 @@ System.out.println(sum);
 
 <br>
 
-#### mapToObj
+#### 2.6. mapToObj
 
 작업을 하다 보면 일반적인 Stream 객체를 원시 Stream으로 바꾸거나 그 반대의 작업이 필요한 경우가 있다. 이를 위해 일반적인 Stream 객체는 mapToInt(), mapToLong(), mapToDouble()이라는 특수한 Mapping 연산을 지원하고 있으며, 그 반대로 원시 객체는 mapToObject를 통해 일반적인 Stream 객체로 바꿀 수 있다.
 
@@ -343,7 +343,7 @@ IntStream intStream1 = integers.stream()
 
 가공 단계를 거쳐 만들어진 데이터를 최종적으로 원하는 결과 데이터로 만드는 단계이다. Stream의 요소들을 소모하면서 연산이 수행되기 때문에 한 번만 처리 가능하며, 연산이 끝난 뒤 Stream이 닫히게 된다.
 
-<h4 id="cal">calculate</h4>
+<h4 id="cal">3.1. calculate</h4>
 
 Stream 요소들을 대상으로 최대(max), 최소(min), 평균(average), 합(sum), 개수(count)를 구하는 최종 연산들이 있다. 
 
@@ -376,7 +376,7 @@ long count = intStream.count(); // 4
 
 <br>
 
-#### collect
+#### 3.2. collect
 
 Stream의 요소들을 List, Set, Map 등 다른 종류의 결과로 수집하고 싶을 경우 collect 함수를 사용한다. 
 
@@ -393,7 +393,7 @@ List<User> userList = Arrays.asList(
 
 collect에 대한 이해를 돕기 위해 간단한 User class를 만들고 그 List를 준비했다. User는 name(이름), age(나이)를 멤버 변수로 가지고 있다. 
 
-##### 1. Collectors.toList
+##### 3.2.1. Collectors.toList
 
 Stream에서 작업한 결과를 List로 반환한다. 
 
@@ -415,7 +415,7 @@ Stream의 각 요소(User)에서 name을 꺼내 매핑하고, 그 결과를 List
 
 
 
-##### 2. Collectors.joining
+##### 3.2.2. Collectors.joining
 
 Stream에서 작업한 결과를 1개의 String으로 이어붙인다. 
 
@@ -441,7 +441,7 @@ User 리스트에서 name을 꺼내고 각 요소들을 하나의 문자열로 �
 
 
 
-##### 3. Collectors.averagingInt / Collectors.summingInt / Collectors.summarizingInt
+##### 3.2.3. Collectors.averagingInt / Collectors.summingInt / Collectors.summarizingInt
 
 Stream에서 작업한 결과의 평균과 합을 구한다. 
 
@@ -482,7 +482,7 @@ IntSummaryStatistics{count=4, sum=111, min=24, average=27.750000, max=31}
 
 
 
-##### 4. Collectors.groupingBy
+##### 3.2.4. Collectors.groupingBy
 
 Stream에서 작업한 결과를 특정 그룹으로 묶는다. 결과는 Map 타입으로 반환되며, 인자로 함수형 인터페이스 Function을 받는다. 
 
@@ -501,7 +501,7 @@ User 리스트에서 age를 꺼내 나이를 기준으로 그룹을 나눴다. �
 
 
 
-##### 5. Collectors.partitioningBy
+##### 3.2.5. Collectors.partitioningBy
 
 Stream에서 작업한 결과를 특정 기준으로 나눈다. 결과는 Map 타입으로 반환되며, 인자로 함수형 인터페이스 Predicate를 받는다. 
 
@@ -520,7 +520,7 @@ User 리스트에서 25살 이상인 사람과 그렇지 않은 사람을 나눴
 
 
 
-##### 6. Collectors.collectingAndThen
+##### 3.2.6. Collectors.collectingAndThen
 
 Stream에서 작업한 결과를 특정 타입으로 collect한 이후에 추가 작업을 지정한다. 첫 번째 인자로 Collectors를 받아 결과를 만들고, 두 번째 인자로 함수형 인터페이스 Function을 받아 추가 작업을 처리한다.
 
@@ -540,7 +540,7 @@ User 리스트를 Set 타입으로 collect하고, 추가 작업으로 수정 불
 
 <br>
 
-#### match
+#### 3.3. match
 
 Stream에서 작업한 결과가 특정 조건을 만족하는지 검사한다. 인자로 함수형 인터페이스 Predicate를 받아, 이를 검사 조건으로 사용한다.
 
@@ -562,7 +562,7 @@ boolean noneMatch = integers.stream().noneMatch(num -> num % 2 == 1); // true
 
 <br>
 
-#### forEach
+#### 3.4. forEach
 
 Stream에서 작업한 결과의 모든 요소에 특정 연산을 수행한다. 보통 `System.out.println`을 넘겨 최종 결과를 출력하는 용도로 사용한다. 
 
