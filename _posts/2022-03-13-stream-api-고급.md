@@ -205,6 +205,51 @@ public interface BinaryOperator<T> extends BiFunction<T,T,T> {
 새롭게 추가된 BinaryOperator타입의 combiner는 병렬 처리 시에 각 쓰레드에서 만들어진 결과를 합치는 작업을 수행한다. 때문에 combiner을 추가하여도 ParallelStream으로 실행하지 않으면 combiner은 호출되지 않는다. 
 
 ```java
+int result = Stream.of(1, 2, 3)
+  .reduce(10, Integer::sum, (a, b) -> {
+    System.out.println("combiner was called");
+    return a + b;
+  });
+
+System.out.println(result);
+
+/* 실행 결과
+16
+*/
+```
+
+위의 예제는 Parallel Stream이 아니기 때문에 `combiner was called` 가 출력되지 않는다. 그러면 이제 
+
+```java
+int result = Stream.of(1, 2, 3)
+  .parallel()
+  .reduce(10, Integer::sum, (a, b) -> {
+    System.out.println("combiner was called");
+    return a + b;
+  });
+
+System.out.println(result);
+
+/* 실행 결과
+36
+*/
+```
+
+
+
+```java
+int result = 10 + Stream.of(1, 2, 3)
+  .parallel()
+  .reduce(0, Integer::sum, (a, b) -> {
+    System.out.println("combiner was called");
+    return a + b;
+  });
+
+System.out.println(result);
+
+/* 실행 결과
+16
+*/
 ```
 
 
