@@ -218,7 +218,7 @@ System.out.println(result);
 */
 ```
 
-위의 예제는 Parallel Stream이 아니기 때문에 `combiner was called` 가 출력되지 않는다. 그러면 이제 
+위의 예제는 Parallel Stream이 아니기 때문에 `combiner was called` 가 출력되지 않는다. 다음 예제를 보자.
 
 ```java
 int result = Stream.of(1, 2, 3)
@@ -231,11 +231,15 @@ int result = Stream.of(1, 2, 3)
 System.out.println(result);
 
 /* 실행 결과
+combiner was called
+combiner was called
 36
 */
 ```
 
+parallel 메서드를 사용해 스트림이 병렬로 처리되도록 하고 reduce를 실행했다. 결과를 보면 combiner가 두 번 실행된 것을 확인할 수 있다. 그 이유는 Stream의 각 요소(1, 2, 3)가 병렬로 처리되고, 처리된 결과를 하나의 결과값으로 만드는 연산이 두 번 발생하기 때문이다. 
 
+즉, 병렬로 처리된 11(10+1), 12(10+2), 13(10+3)에서 역순으로 13 + 12를 먼저 더하고 25 + 11을 더해 combiner가 총 2번 호출되며 최종적으로 36이라는 결과를 만들어 낸다. 초기값(10) 또한 병렬로 발생하는 것을 주의하자.
 
 ```java
 int result = 10 + Stream.of(1, 2, 3)
@@ -248,11 +252,15 @@ int result = 10 + Stream.of(1, 2, 3)
 System.out.println(result);
 
 /* 실행 결과
+combiner was called
+combiner was called
 16
 */
 ```
 
+초기값이 한 개만 필요할 경우, 위와같이 identity는 0을 넘기고 reduce의 계산된 결과값에 초기값을 더해야 한다.
 
+여기서 또 주목해야할 것은 병렬 스트림의 경우 combiner라는 추가 연산이 발생한다는 것이다. 때문에 간단한 작업에 병렬 연산을 적용하면 오리혀 처리 속도가 느려질 수 있음을 고려해야 한다. 
 
 <br>
 
