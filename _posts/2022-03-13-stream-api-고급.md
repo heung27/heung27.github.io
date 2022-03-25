@@ -12,7 +12,15 @@ tags: [Java 8, Stream API, Functional Interface, Lambda, Method Reference]
 
 
 
-## 1. FlatMap
+
+
+## 1. Parallel Stream
+
+
+
+<br>
+
+## 2. FlatMap
 
 처리해야 하는 데이터가 2차원 배열 또는 2차원 리스트일 경우, 이를 1차원으로 처리해야 한다면 어떻게 해야할까? map을 이용한다고 해도 2중 Stream의 형태로 처리될 것이다. 이렇게 중첩 구조를 한 단계 제거하기 위해 사용되는 중간 연산이 flatMap이다. 
 
@@ -102,7 +110,7 @@ Java 8 in Action
 
 <br>
 
-## 2. Reduce
+## 3. Reduce
 
 누산기(Accumulator)와 연산(Operation)으로 컬렉션에 있는 값을 처리하여 더 작은 컬렉션이나 단일 값을 만드는 작업이다.
 
@@ -114,7 +122,7 @@ reduce 메서드는 여러 요소들을 통해 새로운 결과를 만들어내�
 
 
 
-### 2.1 reduce(accumulator)
+### 3.1 reduce(accumulator)
 
 ```java
 Optional<T> reduce(BinaryOperator<T> accumulator);
@@ -137,7 +145,7 @@ System.out.println(optionalInt.orElse(0));
 
 <br>
 
-### 2.2 reduce(identity, accumulator)
+### 3.2 reduce(identity, accumulator)
 
 ```java
 T reduce(T identity, BinaryOperator<T> accumulator);
@@ -162,7 +170,7 @@ System.out.println(result);
 
 <br>
 
-### 2.3 reduce(identity, accumulator, combiner)
+### 3.3 reduce(identity, accumulator, combiner)
 
 ```java
 <U> U reduce(U identity, BiFunction<U, ? super T, U> accumulator, BinaryOperator<U> combiner);
@@ -264,21 +272,109 @@ combiner was called
 
 <br>
 
-## 3. Null-safe Stream
+## 4. Null-Safe Stream
 
+Java를 이용해 개발을 하다보면 NPE(NullPointException)가 자주 발생한다. 물론 NPE를 방지하기 위해 null 여부를 검사하는 로직을 작성해 줄 수 있지만 이러한 코드는 가독성이 떨어진다.
 
+이 문제를 해결하기 위해 Java8에서부터는 Optional이라는 Wrapper 클래스를 제공한다. Stream API 역시 이 Optional의 도움을 받아 Null-Safe한 Stream을 생성할 수 있다. 
 
-<br>
+(Optional에 대해 잘 알지 못한다면 이전의 [Optional](https://heung27.github.io/posts/optional/) 포스팅을 참고하길 바란다.)
 
-## 4. Parallel Stream
+```java
+public <T> Stream<T> collectionToStream(Collection<T> collection) {
+  return Optional.ofNullable(collection)
+    .map(Collection::stream)
+    .orElseGet(Stream::empty);
+}
+```
 
+위 코드는 컬렉션을 인자로 받아 Optional 객체로 만들고 Stream 생성 후 리턴하는 메서드이다. 만약 컬렉션이 null인 경우 Empty Stream을 반환한다.
 
+```java
+List<String> nullList = null;
+
+// NPE 발생
+nullList.stream()
+  .map(String::length)
+  .forEach((System.out::println)); // NPE
+
+```
+
+NPE가 발생하는 상황을 가정해보았다. null의 Stream을 생성하려고 하니 당연히 NPE가 발생한다.
+
+```java
+List<String> nullList = null;
+
+// Empty Stream으로 처리
+collectionToStream(nullList)
+  .map(String::length)
+  .forEach(System.out::println); // []
+```
+
+ 우리가 만든`collectionToStream` 메서드를 사용하면 NPE가 발생하는 대신 Empty Stream으로 작업을 마칠 수 있다.
 
 <br>
 
 ## 5. 실행 순서
 
+Stream API는 실행 순서를 고려하지 않고 잘 못 사용하면 처리 속도의 지연을 야기할 수 있다. 때문에 작성한 Stream API 코드가 정확히 어떻게 동작하는지 이해하는 것이 중요하다.
 
+```java
+Stream.of("a", "b", "c", "d", "e", "f")
+  .filter(str -> {
+    System.out.println("filter: " + str);
+    return true;
+  })
+  .forEach(str -> {
+    System.out.println("forEach: " + str);
+  });
+
+/* 실행 결과
+filter: a
+forEach: a
+filter: b
+forEach: b
+filter: c
+forEach: c
+filter: d
+forEach: d
+*/
+```
+
+실행 결과를 보면 모든 요소에 대해 filter가 진행되고 forEach가 실행되는 수평적 구조로 처리하는 것이 아니라, 각각의 요소에 대해 filter와 forEach가 먼저 수행되는 수직적 구조로 처리하는 것을 알 수 있다. 
+
+```java
+boolean result = Stream.of("a", "b", "c", "d") 
+  .map(str -> {
+    System.out.println("map: " + str);
+    return str.toUpperCase();
+  })
+  .anyMatch(str -> {
+    System.out.println("anyMatch: " + str);
+    return str.startsWith("A");
+  });
+
+/* 실행 결과
+map: a
+anyMatch: A
+*/
+```
+
+위의 예제는 Stream의 각 요소를 대문자로 변환하고, 변환된 데이터 중 "A"로 시작하는 문자열이 있는지 검사하는 로직이다. 만약 Stream의 연산이 수평적 구조로 처리된다면 위의 결과는 map 4번(a, b, c, d) + anyMatch 1번(a) 실행될 것 이다. 하지만 실제로 연산은 수직적 구조로 처리되기 때문에 map 1번 + anyMatch 1번 실행된 것을 확인할 수 있다. 
+
+이러한 처리 방식은 연산의 실행 순서에 따라 전체 연산의 수가 달라지고, 이는 곧 성능에 영향을 미치게 된다. 다음 예제를 통해 자세히 알아보자.
+
+```java
+```
+
+
+
+```java
+```
+
+
+
+때문에 성능 향상을 위해 실행 순서를 고려해야 한다.
 
 <br>
 
