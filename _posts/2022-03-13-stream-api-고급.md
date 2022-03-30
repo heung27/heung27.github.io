@@ -16,6 +16,107 @@ tags: [Java 8, Stream API, Functional Interface, Lambda, Method Reference]
 
 ## 1. Parallel Stream
 
+Stream API는 많은 양의 데이터를 처리하는 경우 런타임 성능을 높이기 위해 병렬 스트림(Parallel Stream)을 제공한다. Parallel Stream는 내부적으로 Java 7에서 도입된 Fork & Join을 사용하고 있다.
+
+```java
+List<String> strings = Arrays.asList("a", "b", "c", "d");
+
+// 병렬 스트림 생성
+Stream<String> parallelStream = strings.parallelStream();
+
+// 병렬 여부 확인
+System.out.println(parallelStream.isParallel()); // true
+```
+
+Parallel Stream을 생성하기 위해서는 Collection의 메서드 `parallelStream()`을 사용한다. `isParallel()`메서드를 통해 병렬 여부를 확인할 수 있다. 
+
+위의 방법 이외에 일반적인 순차 Stream으로 진행하던 중  `parallel()` 메서드를 사용해 일부 연산만을 병렬로 처리하게 할 수 있다. 
+
+```java
+
+```
+
+예제를 통해 어떻게 동작하는지 알아보자.
+
+```java
+Arrays.asList("a", "b", "c", "d")
+  .parallelStream()
+  .filter(str -> {
+    System.out.format("filter: %s [%s]\n", str, Thread.currentThread().getName());
+    return true;
+  })
+  .map(str -> {
+    System.out.format("map: %s [%s]\n", str, Thread.currentThread().getName());
+    return str.toUpperCase();
+  })
+  .forEach(str -> {
+    System.out.format("forEach: %s [%s]\n", str, Thread.currentThread().getName());
+  });
+
+/* 실행 결과
+filter: c [main]
+filter: b [ForkJoinPool.commonPool-worker-3]
+filter: a [ForkJoinPool.commonPool-worker-7]
+map: a [ForkJoinPool.commonPool-worker-7]
+forEach: A [ForkJoinPool.commonPool-worker-7]
+filter: d [ForkJoinPool.commonPool-worker-5]
+map: b [ForkJoinPool.commonPool-worker-3]
+map: c [main]
+forEach: B [ForkJoinPool.commonPool-worker-3]
+map: d [ForkJoinPool.commonPool-worker-5]
+forEach: C [main]
+forEach: D [ForkJoinPool.commonPool-worker-5]
+*/
+```
+
+블라블라
+
+
+
+### Parallel Stream의 정렬
+
+Parallel Stream에서 정렬이 어떻게 동작하는지 알아보기 위해 위의 코드에서 `sorted()`를 추가했다.
+
+```java
+Arrays.asList("a", "b", "c", "d")
+  .parallelStream()
+  .filter(str -> {
+    System.out.format("filter: %s [%s]\n", str, Thread.currentThread().getName());
+    return true;
+  })
+  .map(str -> {
+    System.out.format("map: %s [%s]\n", str, Thread.currentThread().getName());
+    return str.toUpperCase();
+  })
+  .sorted((s1, s2) -> {
+    System.out.format("sort: %s ? %s [%s]\n", s1, s2, Thread.currentThread().getName());
+    return s1.compareTo(s2);
+  })
+  .forEach(str -> {
+    System.out.format("forEach: %s [%s]\n", str, Thread.currentThread().getName());
+  });
+
+/* 실행 결과
+filter: c [main]
+filter: b [ForkJoinPool.commonPool-worker-3]
+map: b [ForkJoinPool.commonPool-worker-3]
+filter: a [ForkJoinPool.commonPool-worker-7]
+map: a [ForkJoinPool.commonPool-worker-7]
+filter: d [ForkJoinPool.commonPool-worker-5]
+map: d [ForkJoinPool.commonPool-worker-5]
+map: c [main]
+sort: B ? A [main]
+sort: C ? B [main]
+sort: D ? C [main]
+forEach: C [main]
+forEach: B [ForkJoinPool.commonPool-worker-3]
+forEach: D [ForkJoinPool.commonPool-worker-5]
+forEach: A [ForkJoinPool.commonPool-worker-7]
+*/
+```
+
+블라블라
+
 
 
 <br>
@@ -365,16 +466,59 @@ anyMatch: A
 이러한 처리 방식은 연산의 실행 순서에 따라 전체 연산의 수가 달라지고, 이는 곧 성능에 영향을 미치게 된다. 다음 예제를 통해 자세히 알아보자.
 
 ```java
+Stream.of("a", "b", "c", "d")
+  .map(str -> {
+    System.out.println("map: " + str);
+    return str.toUpperCase();
+  })
+  .filter(str -> {
+    System.out.println("filter: " + str);
+    return str.startsWith("A");
+  })
+  .forEach(str -> {
+    System.out.println("forEach: " + str);
+  });
+
+/* 실행 결과
+map: a
+filter: A
+forEach: A
+map: b
+filter: B
+map: c
+filter: C
+map: d
+filter: D
+*/
 ```
 
-
+실행 결과를 보면, map과 filter는 Stream의 요소 수 만큼(4번) 호출되었고 forEach는 1번만 호출되었다. filter를 통과한 A라는 문자열에 대해서만 실행된 것이다. 그렇다면 filter를 맨 앞으로 당기면 어떻게 될까.
 
 ```java
+Stream.of("a", "b", "c", "d")
+  .filter(str -> {
+    System.out.println("filter: " + str);
+    return str.startsWith("a");
+  })
+  .map(str -> {
+    System.out.println("map: " + str);
+    return str.toUpperCase();
+  })
+  .forEach(str -> {
+    System.out.println("forEach: " + str);
+  });
+
+/* 실행 결과
+filter: a
+map: a
+forEach: A
+filter: b
+filter: c
+filter: d
+*/
 ```
 
-
-
-때문에 성능 향상을 위해 실행 순서를 고려해야 한다.
+위와 같이 수정된 코드는 filter가 5번, map과 forEach가 각각 1번씩 호출되었다. 동일한 입력과 결과에 대해 더 적은 연산으로 처리할 수 있게 된 것이다. 위의 예제는 간단한 예제이기 때문에 연산 횟수에 큰 차이가 없다. 하지만 처리해야하는 데이터가 많이질수록 그만큼 큰 성능의 차이를 야기할 것이다. 때문에 Stream API를 사용할 때는 반드시 실행 순서를 고려하여 코드를 작성해야 한다.
 
 <br>
 
