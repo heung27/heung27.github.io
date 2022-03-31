@@ -39,12 +39,8 @@ Parallel Stream을 생성하기 위해서는 Collection의 메서드 `parallelSt
 예제를 통해 어떻게 동작하는지 알아보자.
 
 ```java
-Arrays.asList("a", "b", "c", "d")
+Arrays.asList("a", "b", "c", "d", "e", "f", "g", "h")
   .parallelStream()
-  .filter(str -> {
-    System.out.format("filter: %s [%s]\n", str, Thread.currentThread().getName());
-    return true;
-  })
   .map(str -> {
     System.out.format("map: %s [%s]\n", str, Thread.currentThread().getName());
     return str.toUpperCase();
@@ -54,22 +50,51 @@ Arrays.asList("a", "b", "c", "d")
   });
 
 /* 실행 결과
-filter: c [main]
-filter: b [ForkJoinPool.commonPool-worker-3]
-filter: a [ForkJoinPool.commonPool-worker-7]
-map: a [ForkJoinPool.commonPool-worker-7]
-forEach: A [ForkJoinPool.commonPool-worker-7]
-filter: d [ForkJoinPool.commonPool-worker-5]
-map: b [ForkJoinPool.commonPool-worker-3]
-map: c [main]
-forEach: B [ForkJoinPool.commonPool-worker-3]
-map: d [ForkJoinPool.commonPool-worker-5]
-forEach: C [main]
-forEach: D [ForkJoinPool.commonPool-worker-5]
+map: f [main]
+map: a [ForkJoinPool.commonPool-worker-13]
+map: d [ForkJoinPool.commonPool-worker-15]
+map: c [ForkJoinPool.commonPool-worker-3]
+map: b [ForkJoinPool.commonPool-worker-9]
+map: g [ForkJoinPool.commonPool-worker-11]
+map: h [ForkJoinPool.commonPool-worker-5]
+forEach: H [ForkJoinPool.commonPool-worker-5]
+map: e [ForkJoinPool.commonPool-worker-7]
+forEach: G [ForkJoinPool.commonPool-worker-11]
+forEach: B [ForkJoinPool.commonPool-worker-9]
+forEach: C [ForkJoinPool.commonPool-worker-3]
+forEach: D [ForkJoinPool.commonPool-worker-15]
+forEach: A [ForkJoinPool.commonPool-worker-13]
+forEach: F [main]
+forEach: E [ForkJoinPool.commonPool-worker-7]
 */
 ```
 
-블라블라
+실행 결과를 보면 Stream 연산을 어느 스레드가 수행했는지 확인할 수 있다. 물론 어떤 쓰레드가 어떤 작업을 수행할지 비결정적이기 때문에 실행에 따라 출력은 달라 질 수 있다.
+
+1개의 main 스레드와 7개의 worker 스레드가 동작하는데 이러한 결과가 나타난 이유는 Parallel Stream이 내부적으로 common fork join pool을 사용하기 때문이다. ForkJoinPool.commonPool()을 통해 사용가능한 공용의 ForkJoinPool의 갯수를 확인할 수 있는데, 위 예제의 실행 결과는 ForkJoinPool이 7개로 설정되어 있다. 해당 값은 실행 환경의 CPU 코어 수에 따라 다르게 설정된다.
+
+```java
+ForkJoinPool commonPool = ForkJoinPool.commonPool();
+System.out.println(commonPool.getParallelism());
+
+/* 실행 결과
+7
+*/
+```
+
+또한 이 값은 다음과 같은 JVM 매개변수를 통해 별도로 설정해 줄 수 있다.
+
+```java
+-Djava.util.concurrent.ForkJoinPool.common.parallelism=5
+```
+
+
+
+### ForkJoinPool의 동작 방식
+
+
+
+
 
 
 
@@ -538,6 +563,7 @@ filter: d
 
 - [https://mangkyu.tistory.com/112](https://mangkyu.tistory.com/112)
 - [https://futurecreator.github.io/2018/08/26/java-8-streams/](https://futurecreator.github.io/2018/08/26/java-8-streams/)
+- https://m.blog.naver.com/tmondev/220945933678
 - [https://hbase.tistory.com/171](https://hbase.tistory.com/171)
 - [https://12bme.tistory.com/461](https://12bme.tistory.com/461)
 - [https://velog.io/@foeverna/Java-513-%EC%8A%A4%ED%8A%B8%EB%A6%BC-API-Stream-API](https://velog.io/@foeverna/Java-513-%EC%8A%A4%ED%8A%B8%EB%A6%BC-API-Stream-API)
