@@ -557,13 +557,54 @@ filter: d
 
 ## 6. 지연 처리
 
+Stream의 연산은 최종 결과가 만들어 질 때 수행된다. 즉, 결과를 만드는 최종 작업이 수행되지 않는다면 중간 연산은 아무런 동작을 하지 않는다.
 
+다음은 호출 횟수를 카운트하는 예제이다.
 
-<br>
+```java
+private long counter;
 
-## 7. 줄여쓰기
+private void wasCalled() {
+  counter++;
+}
+```
 
+```java
+counter = 0;
+Arrays.asList("a", "b", "c", "d", "e")
+  .stream()
+  .map(str -> {
+    wasCalled();
+    return str.toUpperCase();
+  });
+System.out.println(counter);
 
+/* 실행 결과
+0
+*/
+```
+
+위의 예제는 Stream이 5개의 요소를 가지고 있기 때문에 wasCalled()가 5번 호출되어 5가 출력될 것으로 예상된다. 하지만 예상과 달리 0이 출력된다. 그 이유는 Stream의 최종 작업이 실행되지 않아 실제로 아무런 동작을 하지 않았기 때문이다.
+
+최종 작업으로 collect 메서드를 넣은 후 실행 결과를 확인해 보자.
+
+```java
+counter = 0;
+List<String> strings = Arrays.asList("a", "b", "c", "d", "e")
+  .stream()
+  .map(str -> {
+    wasCalled();
+    return str.toUpperCase();
+  })
+  .collect(Collectors.toList());
+System.out.println(counter);
+
+/* 실행 결과
+5
+*/
+```
+
+ 이제 처음 예상한대로 5가 출력되는 것을 확인할 수 있다.
 
 <br>
 
