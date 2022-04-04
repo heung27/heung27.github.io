@@ -8,9 +8,9 @@ tags: [Java 8, Stream API, Functional Interface, Lambda, Method Reference]
 
 
 
-지난번의 기본편에 이어 고급편을 준비했다. 본편에서는 조금 더 복잡한 Stream API 메서드들과 성능, 주의할 점에 대해 자세히 알아본다. 
+지난번의 [기본편](https://heung27.github.io/posts/stream-api-%EA%B8%B0%EB%B3%B8/)에 이어 고급편을 준비했다. 본편에서는 조금 더 복잡한 Stream API 메서드들과 성능, 주의할 점에 대해 자세히 알아본다. 
 
-
+<br>
 
 ## 1. Parallel Stream
 
@@ -61,9 +61,9 @@ forEach: E [ForkJoinPool.commonPool-worker-7]
 */
 ```
 
-실행 결과를 통해 Stream 연산을 어느 스레드가 수행했는지 확인할 수 있다. 물론 어떤 쓰레드가 어떤 작업을 수행할지 비결정적이기 때문에 실행에 따라 출력은 달라 질 수 있다.
+실행 결과를 통해 각 Stream 연산을 어느 스레드가 수행했는지 확인할 수 있다. 물론 어떤 스레드가 어떤 작업을 수행할지 비결정적이기 때문에 실행에 따라 출력은 달라 질 수 있다.
 
-Parallel Stream은 내부적으로 공용 ForkJoinPool을 사용한다. ForkJoinPool.commonPool()을 통해 사용가능한 공용의 ForkJoinPool의 갯수를 확인할 수 있고, 해당 값은 사용가능한 물리적인 CPU 코어 수에 따라 다르게 설정된다.
+Parallel Stream은 내부적으로 공용 ForkJoinPool을 사용한다. `ForkJoinPool.commonPool()`을 통해 사용 가능한 공용의 ForkJoinPool의 갯수를 확인할 수 있다. 해당 값은 사용 가능한 물리적인 CPU 코어 수에 따라 다르게 설정된다.
 
 위 예제는 7개의 ForkJoinPool로 실행되었고, 그에 따라 7개의 worker 스레드가 동작한 것을 확인할 수 있다.
 
@@ -82,11 +82,11 @@ System.out.println(commonPool.getParallelism());
 -Djava.util.concurrent.ForkJoinPool.common.parallelism=5
 ```
 
-
+<br>
 
 ### Parallel Stream의 정렬
 
-Parallel Stream에서 정렬이 어떻게 동작하는지 확인해보기 위해 위의 예제코드에 정렬 메서드 sorted()를 추가했다.
+Parallel Stream에서 정렬이 어떻게 동작하는지 확인해보기 위해 위의 예제코드에 정렬 메서드 `sorted()`를 추가했다.
 
 ```java
 Arrays.asList("a", "b", "c", "d", "e", "f", "g", "h")
@@ -132,19 +132,19 @@ forEach: H [ForkJoinPool.commonPool-worker-3]
 
 Parallel Stream은 비결정적이기 때문에 실행할 때마다 출력이 다르게 나온다. 하지만 위의 예제를 실행해 보면 map과 forEach는 출력이 바뀌는데 sort는 항상 main 스레드에서 순차적으로 처리되는 것을 확인할 수 있다. 
 
-이러한 이유는 Parallel Stream sort의 내부 동작 방식에 있다. 정렬하고자하는 배열의 길이가 임계값(프로세스에게 할당 가능한 배열의 길이)보다 작으면 순차적인 정렬 방식인 Arrays.sort()를 사용하고, 그보다 크면 parallelSort()를 사용하도록 되어있다. 따라서 위의 예제에서는 배열크기가 작아 순차적으로 처리된 것이다.
+이러한 이유는 Parallel Stream sort의 내부 동작 방식에 있다. 정렬하고자 하는 배열의 길이가 임계값(프로세스에게 할당 가능한 배열의 길이)보다 작으면 순차적인 정렬 방식인 `Arrays.sort()`를 사용하고, 그보다 크면 `parallelSort()`를 사용하도록 되어있다. 따라서 위의 예제에서는 배열크기가 작아 순차적으로 처리된 것이다.
 
  <br>
 
 ### Parallel Stream에서 고려해야 할 사항
 
-Parallel Stream을 이용하면 임의로 스레드 개수를 조정할 수 있어 작업 처리 속도 향상을 기대할 수 있다. 하지만 여기에도 고려해야할 사항은 있다.
+Parallel Stream을 이용하면 임의로 스레드 개수를 조정할 수 있어 작업 처리 속도 향상을 기대할 수 있다. 하지만 여기에도 고려해야 할 사항은 있다.
 
-**1) ForkJoinPool의 특성상 나누어지는 job은 균등하게 처리되어야 한다.**
+#### 1) ForkJoinPool의 특성상 나누어지는 job은 균등하게 처리되어야 한다.
 
 Parallel Stream은 작업을 분할하기 위해 Spliterator의 trySplit()을 사용하는데, 이 분할되는 작업의 단위가 균등하게 나누어져야 하며 나누어지는 작업에 대한 비용이 높지 않아야 순차적 방식보다 효율적으로 처리할 수 있다. Array,  ArrayList와 같이 정확한 전체 사이즈를 알 수 있는 경우에는 분할 처리가 빠르고 비용이 적게 들지만, LinkedList의 경우에는 별다른 효과를 찾기 어렵다.
 
-**2) 병렬로 처리되는 작업이 독립적이지 않다면, 수행 성능에 영향이 있을 수 있다.**
+#### 2) 병렬로 처리되는 작업이 독립적이지 않다면, 수행 성능에 영향이 있을 수 있다.
 
 예를 들어, Stream의 중간 연산 중 sorted() 또는 distinct()와 같은 작업을 수행하는 경우에는 내부적으로 상태에 대한 변수를 각 작업들이 공유(synchronized)하게 되어 있다. 이러한 경우에는 순차적으로 실행하는 경우가 더 효과적일 수 있다.
 
@@ -152,13 +152,13 @@ Parallel Stream은 작업을 분할하기 위해 Spliterator의 trySplit()을 �
 
 그렇다면 Parallel Stream은 언제 사용해야 할까?
 
-Parallel Stream은 앞서 설명한 ForkJoinPool 방식을 이용하기 때문에 분할이 잘 이루어질 수 있는 데이터 구조이거나, 작업이 독립적이면서 CPU사용이 높은 작업에 적합하다고 볼 수 있다.
+Parallel Stream은 앞서 설명한 ForkJoinPool 방식을 이용하기 때문에 분할이 잘 이루어질 수 있는 데이터 구조이거나, 작업이 독립적이면서 CPU 사용이 높은 작업에 적합하다고 볼 수 있다.
 
 <br>
 
 ## 2. FlatMap
 
-처리해야 하는 데이터가 2차원 배열 또는 2차원 리스트일 경우, 이를 1차원으로 처리해야 한다면 어떻게 해야할까? map을 이용한다고 해도 2중 Stream의 형태로 처리될 것이다. 이렇게 중첩 구조를 한 단계 제거하기 위해 사용되는 중간 연산이 flatMap이다. 
+처리해야 하는 데이터가 2차원 배열 또는 2차원 리스트일 경우, 이를 1차원으로 처리해야 한다면 어떻게 해야 할까? map을 이용한다고 해도 2중 Stream의 형태로 처리될 것이다. 이렇게 중첩 구조를 한 단계 제거하기 위해 사용되는 중간 연산이 flatMap이다. 
 
 인자로 반환형이 Stream인 함수형 인터페이스 Function을 받는다. 즉, flatmap은 중첩된 Stream 구조에서 한 단계 제거하여 새로운 Stream을 생성하고 반환하는 것이다. 이런 작업을 '플래트닝(Flattening)'이라고 한다. 
 
@@ -186,7 +186,7 @@ Stream<String> stringStream2 = listList.stream()
   .flatMap(Collection::stream);
 ```
 
-2차원 배열과 2중 리스트를 1차원 Stream으로 Flattening했다. Stream의 요소는 `["a", "b", "c", "d", "e", "f"]`가 된다. 
+2차원 배열과 2중 리스트를 1차원 Stream으로 Flattening 했다. Stream의 요소는 `["a", "b", "c", "d", "e", "f"]`가 된다. 
 
 <br>
 
@@ -242,7 +242,7 @@ Java 8 in Action
 */
 ```
 
-먼저 Developer List Stream에서 map을 사용해 books(Set)를 꺼낸다. 다음 flatMap을 사용해 Set Stream에서 String Stream으로 변환하고 'python'을 포함하는 책을 필터링한 결과를 Set으로 반환한다.(같은 책 중복 제거)
+먼저 Developer List Stream에서 map을 사용해 books(Set)를 꺼낸다. 다음 flatMap을 사용해 Set Stream에서 String Stream으로 변환하고 'python'을 포함하는 책을 필터링한 결과를 Set으로 반환한다. (같은 책 중복 제거)
 
 <br>
 
@@ -255,8 +255,6 @@ reduce 메서드는 여러 요소들을 통해 새로운 결과를 만들어내�
 - Accumulator : 각 요소를 계산한 중간 결과를 생성
 - Identity : 계산을 처리하기 위한 초기값
 - Combiner : Parlallel Stream에서 나누어 계산한 결과를 하나로 합치기 위한 로직
-
-
 
 ### 3.1 reduce(accumulator)
 
@@ -279,8 +277,6 @@ System.out.println(optionalInt.orElse(0));
 */
 ```
 
-<br>
-
 ### 3.2 reduce(identity, accumulator)
 
 ```java
@@ -301,8 +297,6 @@ System.out.println(result);
 20
 */
 ```
-
-<br>
 
 ### 3.3 reduce(identity, accumulator, combiner)
 
@@ -344,7 +338,7 @@ public interface BinaryOperator<T> extends BiFunction<T,T,T> {
 }
 ```
 
-새롭게 추가된 BinaryOperator타입의 combiner는 병렬 처리 시에 각 쓰레드에서 만들어진 결과를 합치는 작업을 수행한다. 때문에 combiner을 추가하여도 ParallelStream으로 실행하지 않으면 combiner은 호출되지 않는다. 
+새롭게 추가된 BinaryOperator타입의 combiner는 병렬 처리 시에 각 스레드에서 만들어진 결과를 합치는 작업을 수행한다. 때문에 combiner을 추가하여도 ParallelStream으로 실행하지 않으면 combiner은 호출되지 않는다. 
 
 ```java
 int result = Stream.of(1, 2, 3)
@@ -360,7 +354,7 @@ System.out.println(result);
 */
 ```
 
-위의 예제는 Parallel Stream이 아니기 때문에 `combiner was called` 가 출력되지 않는다. 다음 예제를 보자.
+위의 예제는 Parallel Stream이 아니기 때문에 `combiner was called`가 출력되지 않는다. 다음 예제를 보자.
 
 ```java
 int result = Stream.of(1, 2, 3)
@@ -402,15 +396,15 @@ combiner was called
 
 초기값이 한 개만 필요할 경우, 위와같이 identity는 0을 넘기고 reduce의 계산된 결과값에 초기값을 더해야 한다.
 
-여기서 또 주목해야할 것은 병렬 스트림의 경우 combiner라는 추가 연산이 발생한다는 것이다. 때문에 간단한 작업에 병렬 연산을 적용하면 오리혀 처리 속도가 느려질 수 있음을 고려해야 한다. 
+여기서 또 주목해야 할 것은 병렬 스트림의 경우 combiner라는 추가 연산이 발생한다는 것이다. 때문에 간단한 작업에 병렬 연산을 적용하면 오리혀 처리 속도가 느려질 수 있음을 고려해야 한다. 
 
 <br>
 
 ## 4. Null-Safe Stream
 
-Java를 이용해 개발을 하다보면 NPE(NullPointException)가 자주 발생한다. 물론 NPE를 방지하기 위해 null 여부를 검사하는 로직을 작성해 줄 수 있지만 이러한 코드는 가독성이 떨어진다.
+Java를 이용해 개발을 하다 보면 NPE(NullPointException)가 자주 발생한다. 물론 NPE를 방지하기 위해 null 여부를 검사하는 로직을 작성해 줄 수 있지만 이러한 코드는 가독성이 떨어진다.
 
-이 문제를 해결하기 위해 Java8에서부터는 Optional이라는 Wrapper 클래스를 제공한다. Stream API 역시 이 Optional의 도움을 받아 Null-Safe한 Stream을 생성할 수 있다. 
+이 문제를 해결하기 위해 Java 8에서부터는 Optional이라는 Wrapper 클래스를 제공한다. Stream API 역시 이 Optional의 도움을 받아 Null-Safe한 Stream을 생성할 수 있다. 
 
 (Optional에 대해 잘 알지 못한다면 이전의 [Optional](https://heung27.github.io/posts/optional/) 포스팅을 참고하길 바란다.)
 
@@ -445,7 +439,7 @@ collectionToStream(nullList)
   .forEach(System.out::println); // []
 ```
 
- 우리가 만든`collectionToStream` 메서드를 사용하면 NPE가 발생하는 대신 Empty Stream으로 작업을 마칠 수 있다.
+우리가 만든`collectionToStream()` 메서드를 사용하면 NPE가 발생하는 대신 Empty Stream으로 작업을 마칠 수 있다.
 
 <br>
 
@@ -494,7 +488,7 @@ anyMatch: A
 */
 ```
 
-위의 예제는 Stream의 각 요소를 대문자로 변환하고, 변환된 데이터 중 "A"로 시작하는 문자열이 있는지 검사하는 로직이다. 만약 Stream의 연산이 수평적 구조로 처리된다면 위의 결과는 map 4번(a, b, c, d) + anyMatch 1번(a) 실행될 것 이다. 하지만 실제로 연산은 수직적 구조로 처리되기 때문에 map 1번 + anyMatch 1번 실행된 것을 확인할 수 있다. 
+위의 예제는 Stream의 각 요소를 대문자로 변환하고, 변환된 데이터 중 "A"로 시작하는 문자열이 있는지 검사하는 로직이다. 만약 Stream의 연산이 수평적 구조로 처리된다면 위의 결과는 map 4번(a, b, c, d) + anyMatch 1번(a) 실행될 것이다. 하지만 실제로 연산은 수직적 구조로 처리되기 때문에 map 1번 + anyMatch 1번 실행된 것을 확인할 수 있다. 
 
 이러한 처리 방식은 연산의 실행 순서에 따라 전체 연산의 수가 달라지고, 이는 곧 성능에 영향을 미치게 된다. 다음 예제를 통해 자세히 알아보자.
 
@@ -551,7 +545,7 @@ filter: d
 */
 ```
 
-위와 같이 수정된 코드는 filter가 5번, map과 forEach가 각각 1번씩 호출되었다. 동일한 입력과 결과에 대해 더 적은 연산으로 처리할 수 있게 된 것이다. 위의 예제는 간단한 예제이기 때문에 연산 횟수에 큰 차이가 없다. 하지만 처리해야하는 데이터가 많이질수록 그만큼 큰 성능의 차이를 야기할 것이다. 때문에 Stream API를 사용할 때는 반드시 실행 순서를 고려하여 코드를 작성해야 한다.
+위와 같이 수정된 코드는 filter가 5번, map과 forEach가 각각 1번씩 호출되었다. 동일한 입력과 결과에 대해 더 적은 연산으로 처리할 수 있게 된 것이다. 위의 예제는 간단한 예제이기 때문에 연산 횟수에 큰 차이가 없다. 하지만 처리해야 하는 데이터가 많아질수록 그만큼 큰 성능의 차이를 야기할 것이다. 때문에 Stream API를 사용할 때는 반드시 실행 순서를 고려하여 코드를 작성해야 한다.
 
 <br>
 
@@ -584,7 +578,7 @@ System.out.println(counter);
 */
 ```
 
-위의 예제는 Stream이 5개의 요소를 가지고 있기 때문에 wasCalled()가 5번 호출되어 5가 출력될 것으로 예상된다. 하지만 예상과 달리 0이 출력된다. 그 이유는 Stream의 최종 작업이 실행되지 않아 실제로 아무런 동작을 하지 않았기 때문이다.
+위의 예제는 Stream이 5개의 요소를 가지고 있기 때문에 `wasCalled()`가 5번 호출되어 5가 출력될 것으로 예상된다. 하지만 예상과 달리 0이 출력된다. 그 이유는 Stream의 최종 작업이 실행되지 않아 실제로 아무런 동작을 하지 않았기 때문이다.
 
 최종 작업으로 collect 메서드를 넣은 후 실행 결과를 확인해 보자.
 
@@ -604,7 +598,15 @@ System.out.println(counter);
 */
 ```
 
- 이제 처음 예상한대로 5가 출력되는 것을 확인할 수 있다.
+ 이제 처음 예상한 대로 5가 출력되는 것을 확인할 수 있다.
+
+<br>
+
+## Related Posts
+
+- [Stream API - 기본](https://heung27.github.io/posts/stream-api-%EA%B8%B0%EB%B3%B8/)
+- [Optional](https://heung27.github.io/posts/optional/)
+- [Functional Interface](https://heung27.github.io/posts/functional-interface/)
 
 <br>
 
@@ -612,7 +614,7 @@ System.out.println(counter);
 
 - [https://mangkyu.tistory.com/112](https://mangkyu.tistory.com/112)
 - [https://futurecreator.github.io/2018/08/26/java-8-streams/](https://futurecreator.github.io/2018/08/26/java-8-streams/)
-- https://m.blog.naver.com/tmondev/220945933678
+- [https://m.blog.naver.com/tmondev/220945933678](https://m.blog.naver.com/tmondev/220945933678)
 - [https://hbase.tistory.com/171](https://hbase.tistory.com/171)
 - [https://12bme.tistory.com/461](https://12bme.tistory.com/461)
 - [https://velog.io/@foeverna/Java-513-%EC%8A%A4%ED%8A%B8%EB%A6%BC-API-Stream-API](https://velog.io/@foeverna/Java-513-%EC%8A%A4%ED%8A%B8%EB%A6%BC-API-Stream-API)
