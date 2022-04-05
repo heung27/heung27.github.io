@@ -26,7 +26,7 @@ Stream<String> parallelStream = strings.parallelStream();
 System.out.println(parallelStream.isParallel()); // true
 ```
 
-Parallel Stream을 생성하기 위해서는 Collection의 메서드 `parallelStream()`을 사용한다. `isParallel()`메서드를 통해 병렬 여부를 확인할 수 있다. 이외에도 일반적인 순차 Stream으로 진행하던 중  `parallel()` 메서드를 사용해 일부 연산만을 병렬로 처리하게 할 수 있다. 
+Parallel Stream을 생성하기 위해서는 Collection의 메서드 `parallelStream()`을 사용하고  `isParallel()`메서드를 통해 병렬 여부를 확인할 수 있다. 이외에도 일반적인 순차 Stream으로 진행하던 중  `parallel()` 메서드를 사용해 일부 연산만을 병렬로 처리하게 할 수 있다. 
 
 예제를 통해 어떻게 동작하는지 알아보자.
 
@@ -63,9 +63,9 @@ forEach: E [ForkJoinPool.commonPool-worker-7]
 
 실행 결과를 통해 각 Stream 연산을 어느 스레드가 수행했는지 확인할 수 있다. 물론 어떤 스레드가 어떤 작업을 수행할지 비결정적이기 때문에 실행에 따라 출력은 달라 질 수 있다.
 
-Parallel Stream은 내부적으로 공용 ForkJoinPool을 사용한다. `ForkJoinPool.commonPool()`을 통해 사용 가능한 공용의 ForkJoinPool의 갯수를 확인할 수 있다. 해당 값은 사용 가능한 물리적인 CPU 코어 수에 따라 다르게 설정된다.
+Parallel Stream은 내부적으로 공용 ForkJoinPool을 사용하고  `ForkJoinPool.commonPool()`을 통해 사용 가능한 공용의 ForkJoinPool의 갯수를 확인할 수 있다. 해당 값은 사용 가능한 물리적인 CPU 코어 수에 따라 다르게 설정된다.
 
-위 예제는 7개의 ForkJoinPool로 실행되었고, 그에 따라 7개의 worker 스레드가 동작한 것을 확인할 수 있다.
+위 예제는 7개의 ForkJoinPool로 실행되었고 그에 따라 7개의 worker 스레드가 동작한 것을 확인할 수 있다.
 
 ```java
 ForkJoinPool commonPool = ForkJoinPool.commonPool();
@@ -140,13 +140,13 @@ Parallel Stream은 비결정적이기 때문에 실행할 때마다 출력이 �
 
 Parallel Stream을 이용하면 임의로 스레드 개수를 조정할 수 있어 작업 처리 속도 향상을 기대할 수 있다. 하지만 여기에도 고려해야 할 사항은 있다.
 
-#### 1) ForkJoinPool의 특성상 나누어지는 job은 균등하게 처리되어야 한다.
+**1) ForkJoinPool의 특성상 나누어지는 job은 균등하게 처리되어야 한다.**
 
 Parallel Stream은 작업을 분할하기 위해 Spliterator의 trySplit()을 사용하는데, 이 분할되는 작업의 단위가 균등하게 나누어져야 하며 나누어지는 작업에 대한 비용이 높지 않아야 순차적 방식보다 효율적으로 처리할 수 있다. Array,  ArrayList와 같이 정확한 전체 사이즈를 알 수 있는 경우에는 분할 처리가 빠르고 비용이 적게 들지만, LinkedList의 경우에는 별다른 효과를 찾기 어렵다.
 
-#### 2) 병렬로 처리되는 작업이 독립적이지 않다면, 수행 성능에 영향이 있을 수 있다.
+**2) 병렬로 처리되는 작업이 독립적이지 않다면 수행 성능에 영향이 있을 수 있다.**
 
-예를 들어, Stream의 중간 연산 중 sorted() 또는 distinct()와 같은 작업을 수행하는 경우에는 내부적으로 상태에 대한 변수를 각 작업들이 공유(synchronized)하게 되어 있다. 이러한 경우에는 순차적으로 실행하는 경우가 더 효과적일 수 있다.
+예를 들어 Stream의 중간 연산 중 sorted() 또는 distinct()와 같은 작업을 수행하는 경우에는 내부적으로 상태에 대한 변수를 각 작업들이 공유(synchronized)하게 되어 있다. 이러한 경우에는 순차적으로 실행하는 경우가 더 효과적일 수 있다.
 
 <br>
 
@@ -250,7 +250,7 @@ Java 8 in Action
 
 누산기(Accumulator)와 연산(Operation)으로 컬렉션에 있는 값을 처리하여 더 작은 컬렉션이나 단일 값을 만드는 작업이다.
 
-reduce 메서드는 여러 요소들을 통해 새로운 결과를 만들어내는데, 최대 3가지의 매개변수를 받을 수 있다. 
+reduce는 여러 요소들을 통해 새로운 결과를 만들어내는데, 최대 3가지의 매개변수를 받을 수 있다. 
 
 - Accumulator : 각 요소를 계산한 중간 결과를 생성
 - Identity : 계산을 처리하기 위한 초기값

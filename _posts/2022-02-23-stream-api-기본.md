@@ -10,15 +10,15 @@ tags: [Java 8, Stream API, Functional Interface, Lambda, Method Reference]
 
 ## Stream API란?
 
-Stream API는 Java 8에서 추가되었으며, 데이터를 추상화하고 처리하는데 자주 사용되는 함수들을 정의해둔 API이다. 
+Stream API는 데이터를 추상화하고 처리하는데 자주 사용되는 함수들을 정의해둔 API이며 Java 8에서 추가되었다. 
 
 여기서 데이터를 추상화하였다는 것은 데이터의 종류와 관계없이 같은 방식으로 데이터를 처리할 수 있다는 것을 의미한다. 
 
 <br>
 
-Java 8 이전에는 배열 또는 컬렉션 인스턴스를 다루기 위해 for 또는 while 문을 돌려 요소를 하나씩 꺼내 연산을 수행했다. 간단한 경우라면 문제가 되지 않지만, 로직이 복잡해질수록 코드의 양도 많아지고 여러 로직이 섞여 가독성도 떨어진다.
+Java 8 이전에는 배열 또는 컬렉션 인스턴스를 다루기 위해 for 또는 while 문을 돌려 요소를 하나씩 꺼내 연산을 수행했다. 이러한 방법은 간단한 경우라면 문제가 되지 않지만 로직이 복잡해질수록 코드의 양도 많아지고 여러 로직이 섞여 가독성도 떨어진다.
 
-Stream API는 반복 문법을 메서드 내부에 숨긴 내부 반복을 사용해 이를 보완한다. 또한 배열 또는 컬렉션 인스턴스에 여러 개의 함수를 조합해 필터링하고 가공된 결과를 얻을 수 있다. 즉, 배열과 컬렉션을 함수형으로 처리할 수 있게 되는 것이다. 
+Stream API는 반복 문법을 메서드 내부에 숨긴 '내부 반복'을 사용해 이를 보완한다. 또한 배열 또는 컬렉션 인스턴스에 여러 개의 함수를 조합하고 필터링해 가공된 결과를 얻을 수 있다. 즉, 배열과 컬렉션을 함수형으로 처리할 수 있게 되는 것이다. 
 
 <br>
 
@@ -37,7 +37,7 @@ Stream API는 반복 문법을 메서드 내부에 숨긴 내부 반복을 사�
 
 ### 1. 데이터 원본을 유지한다.
 
-Stream API는 원본 데이터를 조회하여 원본 데이터가 아닌 별도의 요소들로 Stream을 생성한다. 그렇기 때문에 원본 데이터로부터 읽기만 할 뿐, 정렬이나 필터링 등의 작업은 별도의 Stream 요소들에서 처리된다.
+Stream API는 원본 데이터를 조회하여 원본 데이터가 아닌 별도의 요소들로 Stream을 생성한다. 때문에 원본 데이터로부터 읽기만 할 뿐 정렬이나 필터링 등의 작업은 별도의 Stream 요소들에서 처리된다.
 
 ```java
 List<Integer> list = Arrays.asList(1, 2, 3, 4, 5);
@@ -55,9 +55,7 @@ System.out.println(list);
 */
 ```
 
-Stream을 통해 원본 데이터[1, 2, 3, 4, 5]를 정렬하고 sortedList에 저장했다.
-
-실행 결과를 보면 정렬이 잘 수행되었고, 원본 데이터는 변경되지 않는 것을 확인할 수 있다.
+Stream을 통해 원본 데이터 `[1, 2, 3, 4, 5]`를 정렬하고 sortedList에 저장했다. 실행 결과를 보면 정렬이 잘 수행되었고 원본 데이터는 변경되지 않는 것을 확인할 수 있다.
 
 <br>
 
@@ -82,9 +80,7 @@ Exception in thread "main" java.lang.IllegalStateException: stream has already b
 */
 ```
 
-list의 Stream인 integerStream를 통해 list의 최댓값을 추출했다. 그리고 다시 integerStream를 사용해 같은 연산을 수행했다.
-
-실행 결과로 list의 최댓값 5가 출력된 후 IllegalStateException이 발생했다. integerStream이 이미 사용되고 닫힌 후 재사용하려고 했기 때문이다. 같은 Stream이 필요하다면 다시 생성해 주어야 한다.
+list의 Stream인 integerStream를 통해 list의 최댓값을 추출했다. 그리고 다시 integerStream를 사용해 같은 연산을 수행했다. 실행 결과로 list의 최댓값 5가 출력된 후 IllegalStateException이 발생했다. 이는 integerStream이 이미 사용되고 닫힌 후 재사용하려고 했기 때문이다. 같은 Stream이 필요하다면 다시 생성해 주어야 한다.
 
 <br>
 
@@ -106,15 +102,13 @@ list.stream().forEach(System.out::println);
 */
 ```
 
-list의 요소들을 내부 반복을 통해 하나씩 출력했다.
-
-위의 예제는 아주 단순하기 때문에 기존의 반복문과의 큰 차이를 느낄 수 없을지도 모른다. 하지만 복잡한 로직을 함수 조합과 내부 반복을 통해 간결하게 표현했을 때, 비로소 그 편리함에 희열을 느낄 수 있다. ~~(나는 그렇다)~~
+ list의 요소들을 내부 반복을 통해 하나씩 출력했다. 이 예제는 아주 단순하기 때문에 기존의 반복문과의 큰 차이를 느낄 수 없을지도 모른다. 하지만 복잡한 로직을 함수 조합과 내부 반복을 통해 간결하게 표현했을 때, 비로소 그 편리함에 희열을 느낄 수 있다. ~~(나는 그렇다)~~
 
 <br>
 
 ## 사용
 
-간단한 예제를 통해 Stream API의 개념과 특징을 알아보았다. 이제 또 다른 예제를 통해 사용법을 알아보자. 
+간단한 예제를 통해 Stream API의 개념과 특징을 알아보았다. 이제 또 다른 예제를 통해 자세한 사용법을 알아보자. 
 
 Stream API의 연산은 크게 세 단계로 나눌 수 있다. Stream을 생성하는 단계, 데이터를 가공하는 단계, 마지막으로 결과 데이터를 만드는 단계가 있다. 
 
@@ -124,7 +118,7 @@ Stream 연산을 하기 위해서는 먼저 Stream 객체를 생성해 주어야
 
 #### 1.1. 배열 Stream
 
-Stream.of 또는 Arrays.stream 메서드를 사용해 생성한다. 
+`Stream.of()` 또는 `Arrays.stream()` 메서드를 사용해 생성한다. 
 
 ```java
 String[] arr = new String[] {"a", "b", "c", "d"};
@@ -150,7 +144,7 @@ Stream<String> stringStream = list.stream();
 
 #### 1.3. 원시 Stream
 
-위와 같이 객체를 위한 Stream 외에 원시 타입(int, long, double)을 다루기 위한 특수한 Stream도 있다. range 메서드를 통해 값의 범위를 지정해 생성한다.
+위와 같이 객체를 위한 Stream 외에 원시 타입(int, long, double)을 다루기 위한 특수한 Stream도 있다. `of()` 또는 `range()` 메서드를 통해 생성한다. `range()` 메서드는 값의 범위를 지정한다.
 
 ```java
 IntStream intStream = IntStream.range(1, 10);
@@ -190,6 +184,8 @@ Stream에서 조건에 맞지 않는 데이터를 걸려내 데이터를 정제�
 Stream<T> filter(Predicate<? super T> predicate);
 ```
 
+다음은 1부터 5까지의 숫자 리스트에서 3 이상의 숫자를 필터링한 예제이다.
+
 ```java
 List<Integer> integers = Arrays.asList(1, 2, 3, 4, 5);
 
@@ -204,19 +200,19 @@ integers.stream()
 */
 ```
 
-1부터 5까지의 숫자 리스트에서 3 이상의 숫자를 필터링했다.
-
 <br>
 
 #### 2.2. map
 
 Stream의 각 요소들에 동일한 연산을 적용하는 메서드이다. 인자로 각 요소들에 적용할 연산인 함수형 인터페이스 Function을 받는다.
 
-Stream에 들어가 있는 값이 특정 로직을 거친 후 새로운 스트림에 담기게 되는데, 이러한 작업을 매핑(mapping)이라고 한다.
+Stream에 들어가 있는 값이 특정 로직을 거친 후 새로운 Stream에 담기게 되는데, 이러한 작업을 매핑(mapping)이라고 한다.
 
 ```java
 <R> Stream<R> map(Function<? super T, ? extends R> mapper);
 ```
+
+다음은 1부터 5까지의 숫자 리스트에서 각 요소에 * 2를 적용한 예제이다.
 
 ```java
 List<Integer> integers = Arrays.asList(1, 2, 3, 4, 5);
@@ -234,8 +230,6 @@ integers.stream()
 */
 ```
 
-1부터 5까지의 숫자 리스트에서 각 요소에 * 2를 적용했다.
-
 <br>
 
 #### 2.3. sorted
@@ -246,6 +240,8 @@ Stream의 요소들을 정렬하는 메서드이다. 인자로 정렬 방법을 
 Stream<T> sorted();
 Stream<T> sorted(Comparator<? super T> comparator);
 ```
+
+다음은 1부터 5까지의 숫자 리스트를 내림차순으로 정렬한 예제이다.
 
 ````java
 List<Integer> integers = Arrays.asList(1, 2, 3, 4, 5);
@@ -263,8 +259,6 @@ integers.stream()
 */
 ````
 
-1부터 5까지 오름차순으로 정렬되어 있는 리스트를 준비했다. 여기에 `Comparator.reverseOrder()`를 사용하여 내림차순으로 다시 정렬했다.
-
 <br>
 
 #### 2.4. distinct
@@ -274,6 +268,8 @@ Stream의 요소들에 중복된 데이터가 존재하는 경우, 중복을 제
 ```java
 Stream<T> distinct();
 ```
+
+다음은 중복된 값을 가지는 숫자 리스트의 중복을 제거한 예제이다.
 
 ```java
 List<Integer> integers = Arrays.asList(1, 1, 1, 5, 5);
@@ -288,8 +284,6 @@ integers.stream()
 */
 ```
 
-1이 세 개, 5가 두 개 가지고 있는 리스트를 준비하고, distinct를 수행해 중복 데이터를 제거했다.
-
 여기서 주의해야 할 점이 하나 있다. distinct는 중복 데이터를 검사하기 위해 Object의 equals 메서드를 사용한다. 때문에 우리가 생성한 클래스를 Stream으로 사용한다고 하면, `equals()`와 `hashCode()`를 오버라이드 해야만 distinct를 제대로 적용할 수 있다.
 
 <br>
@@ -303,6 +297,8 @@ peek라는 단어가 '엿보다'라는 뜻을 가지고 있는 것처럼, peek �
 ```java
 Stream<T> peek(Consumer<? super T> action);
 ```
+
+다음은 1부터 4를 가지는 IntStream의 합계를 계산하는 예제이다.
 
 ```java
 IntStream intStream = IntStream.range(1, 5); // 1 ~ 4
@@ -322,13 +318,13 @@ System.out.println(sum);
 */
 ```
 
-1부터 4를 가지는 IntStream의 합계를 계산하는 과정이다. peek 함수를 적용하여 중간값을 출력해 확인하였고, 마지막으로 sum을 적용해 합계를 계산했다.
+ peek 함수를 적용하여 중간값을 출력해 확인하였고, 마지막으로 sum을 적용해 합계를 계산했다.
 
 <br>
 
 #### 2.6. mapToObj
 
-작업을 하다 보면 일반적인 Stream 객체를 원시 Stream으로 바꾸거나 그 반대의 작업이 필요한 경우가 있다. 이를 위해 일반적인 Stream 객체는 mapToInt(), mapToLong(), mapToDouble()이라는 특수한 Mapping 연산을 지원하고 있으며, 그 반대로 원시 객체는 mapToObject를 통해 일반적인 Stream 객체로 바꿀 수 있다.
+작업을 하다 보면 일반적인 Stream 객체를 원시 Stream으로 바꾸거나 그 반대의 작업이 필요한 경우가 있다. 이를 위해 일반적인 Stream 객체는 `mapToInt(), mapToLong(), mapToDouble()`라는 특수한 Mapping 연산을 지원하고 있으며, 그 반대로 원시 객체는 `mapToObj()`를 통해 일반적인 Stream 객체로 바꿀 수 있다.
 
 ```java
 List<Integer> integers = Arrays.asList(1, 2, 3, 4, 5);
@@ -355,17 +351,13 @@ OptionalInt optionalInt = intStream.max();
 
 위 예제는 max 함수를 사용하여 최댓값을 구했다. 보이는 것처럼 `max()`는 반환형이 int가 아닌 OptionalInt이다. Stream 안에 값이 없을 경우 최댓값을 계산할 수 없기 때문에 반환형이 Optional인 것이다. 
 
-
-
 ``` java
 int max = intStream.max().orElse(0); // 4
 int min = intStream.min().orElse(0); // 1
 double average = intStream.average().orElse(0); // 2.5
 ```
 
-`min()`와 `average()`도 마찬가지로 반환형이 Optional이다. 따라서 원시 타입의 결과를 원한다면 orElse와 같은 메서드를 사용해 내부에서 값을 꺼내야 한다.
-
-
+`min()`와 `average()`도 마찬가지로 반환형이 Optional이다. 따라서 원시 타입의 결과를 원한다면 `orElse()`와 같은 메서드를 사용해 내부에서 값을 꺼내야 한다.
 
 ```java
 int sum = intStream.sum(); // 10
@@ -378,9 +370,9 @@ long count = intStream.count(); // 4
 
 #### 3.2. collect
 
-Stream의 요소들을 List, Set, Map 등 다른 종류의 결과로 수집하고 싶을 경우 collect 함수를 사용한다. 
+Stream의 요소들을 List, Set, Map 등 다른 종류의 결과로 수집하고 싶을 경우 collect를 사용한다. 
 
-collect 함수는 어떻게 Stream의 요소들을 수집할 것인가를 정의한 Collector 타입을 인자로 받아서 처리한다. 일반적으로 List로 Stream의 요소들을 수집하는 경우가 많은데, 이렇게 자주 사용하는 작업은 Collectors 객체에서 static method로 제공하고 있다. 원하는 것이 없는 경우에는 Collector 인터페이스를 직접 구현하여 사용할 수도 있다.
+collect는 어떻게 Stream의 요소들을 수집할 것인가를 정의한 Collector 타입을 인자로 받아서 처리한다. 일반적으로 List로 Stream의 요소들을 수집하는 경우가 많은데, 이렇게 자주 사용하는 작업은 Collectors 객체에서 static method로 제공하고 있다. 원하는 것이 없는 경우에는 Collector 인터페이스를 직접 구현하여 사용할 수도 있다.
 
 ```java
 List<User> userList = Arrays.asList(
@@ -445,7 +437,7 @@ User 리스트에서 name을 꺼내고 각 요소들을 하나의 문자열로 �
 
 Stream에서 작업한 결과의 평균과 합을 구한다. 
 
-아래의 예제에서는 int 자료형만을 사용했는데 averaging, summing, summarizing 메서드는 각 원시 타입(int, long, double) 별로 제공된다.
+아래의 예제에서는 int 자료형만을 사용했는데 `averaging(), summing(), summarizing()` 메서드는 각 원시 타입(int, long, double) 별로 제공된다.
 
 ```java
 Double average = userList.stream()
@@ -465,7 +457,7 @@ System.out.println(sum);
 
 User 리스트에서 age를 꺼내 평균과 합을 구했다. 
 
-평균과 합은 위의 [calculate](#cal)을 사용해서 구할 수 있었다. 이 둘은 사용되는 스트림의 타입이 다른데, calculate는 IntStream과 같은 원시 Stream에서 사용하고 collect는 컬렉션 Stream에서 사용한다.  
+평균과 합은 [calculate](#cal)을 사용해서 구할 수 있었다. 이 둘은 사용되는 스트림의 타입이 다른데, calculate는 IntStream과 같은 원시 Stream에서 사용하고 collect는 컬렉션 Stream에서 사용한다.  
 
 ```java
 IntSummaryStatistics statistics = userList.stream()
@@ -536,13 +528,13 @@ Set<User> unmodifiableSet = userList.stream()
 */
 ```
 
-User 리스트를 Set 타입으로 collect하고, 추가 작업으로 수정 불가능한 Set으로 변환했다.
+User 리스트를 Set 타입으로 collect하고 추가 작업으로 일반적인 Set을 수정 불가능한 Set으로 변환했다.
 
 <br>
 
 #### 3.3. match
 
-Stream에서 작업한 결과가 특정 조건을 만족하는지 검사한다. 인자로 함수형 인터페이스 Predicate를 받아, 이를 검사 조건으로 사용한다.
+Stream에서 작업한 결과가 특정 조건을 만족하는지 검사한다. 인자로 함수형 인터페이스 Predicate를 받아 검사 조건으로 사용한다.
 
 다음과 같은 세 가지 메서드가 있다.
 
@@ -564,9 +556,9 @@ boolean noneMatch = integers.stream().noneMatch(num -> num % 2 == 1); // true
 
 #### 3.4. forEach
 
-Stream에서 작업한 결과의 모든 요소에 특정 연산을 수행한다. 보통 `System.out.println`을 넘겨 최종 결과를 출력하는 용도로 사용한다. 
+Stream에서 작업한 결과의 모든 요소에 특정 연산을 수행한다. 보통 `System.out.println()`을 넘겨 최종 결과를 출력하는 용도로 사용한다. 
 
-앞에서 가공 파트에서 살펴본 [peek](#peek) 메서드와는 중간 작업과 최종 작업이라는 차이가 있다.
+앞의 가공 파트에서 살펴본 [peek](#peek)와는 중간 작업과 최종 작업이라는 차이가 있다.
 
 ```java
 List<Integer> integers = Arrays.asList(1, 2, 3, 4, 5);
@@ -576,7 +568,15 @@ list.stream().forEach(System.out::println);
 
 <br>
 
-지금까지 Stream API의 개념과 기본적인 사용법을 알아보았다. 이외에도 제공되는 기능들이 있는데, 이를 잘 활용하기 위해서는 더 깊은 이해가 필요하다. 다음 포스팅에서 자세히 다루어 본다.
+지금까지 Stream API의 개념과 기본적인 사용법을 알아보았다. 이외에도 제공되는 기능들이 있는데 이를 잘 활용하기 위해서는 더 깊은 이해가 필요하다. 다음 포스팅에서 자세히 다루어 본다.
+
+<br>
+
+## Related Posts
+
+- [Stream API - 고급](https://heung27.github.io/posts/stream-api-%EA%B3%A0%EA%B8%89/)
+- [Optional](https://heung27.github.io/posts/optional/)
+- [Functional Interface](https://heung27.github.io/posts/functional-interface/)
 
 <br>
 
