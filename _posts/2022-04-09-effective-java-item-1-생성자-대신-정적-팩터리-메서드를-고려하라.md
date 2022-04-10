@@ -23,7 +23,7 @@ public static Boolean valueOf(boolean b) {
 
 <br>
 
-### 장점 1. 이름을 가질 수 있다.
+## 장점 1. 이름을 가질 수 있다.
 
 생성자에 넘기는 매개변수와 생성자 자체 만으로는 반환될 객체의 특성을 제대로 설명하지 못 한다. 반면 정적 팩터리 메서드는 이름만 잘 지으면 **반환될 객체의 특성을 쉽게 묘사할 수 있다.**
 
@@ -48,7 +48,7 @@ public class BigInteger extends Number implements Comparable<BigInteger> {
 
 <br>
 
-### 장점 2. 호출될 때마다 인스턴스를 새로 생성하지는 않아도 된다.
+## 장점 2. 호출될 때마다 인스턴스를 새로 생성하지는 않아도 된다.
 
 이 덕분에 불변 클래스는 **인스턴스를 미리 만들어 놓거나 새로 생성한 인스턴스를 캐싱하여 재활용하는 식으로 불필요한 객체 생성을 피할 수 있다.** 비슷한 기법으로 플라이웨이트 패턴이 있다.
 
@@ -97,7 +97,7 @@ public class Developer {
 
 <br>
 
-### 장점 3. 반환 타입의 하위 타입 객체를 반환할 수 있는 능력이 있다.
+## 장점 3. 반환 타입의 하위 타입 객체를 반환할 수 있는 능력이 있다.
 
 이 능력은 **반환할 객체의 클래스를 자유롭게 선택할 수 있게 하는 ‘엄청난 유연성'을 선물한다.** API를 만들 때 이 유연성을 응용하면 구현 클래스를 공개하지 않고도 그 객체를 반환할 수 있어 API를 작게 유지할 수 있다. 이는 인터페이스를 정적 팩터리 메서드의 반환 타입으로 사용하는 인터페이스 기반 프레임워크를 만드는 핵심 기술이다.
 
@@ -113,7 +113,7 @@ public class Developer {
 
 <br>
 
-### 장점 4. 입력 매개변수에 따라 매번 다른 클래스의 객체를 반환할 수 있다.
+## 장점 4. 입력 매개변수에 따라 매번 다른 클래스의 객체를 반환할 수 있다.
 
 반환 타입의 하위 타입이기만 하면 어떤 클래스의 객체를 반환하든 상관없다. 클라이언트는 팩터리가 건네주는 객체가 어느 클래스의 인스턴스인지 알 수도 없고 알 필요도 없다.
 
@@ -140,6 +140,9 @@ public abstract class EnumSet<E extends Enum<E>> {
 
 	...
 }
+```
+
+```java
 package java.util;
 
 // 위의 noneOf 메서드는 반환형이 EnumSet 인데, RegularEnumSet와 JumboEnumSet를 반환했다.
@@ -155,7 +158,7 @@ class JumboEnumSet<E extends Enum<E>> extends EnumSet<E> {
 
 <br>
 
-### 장점 5. 정적 펙터리 메서드를 작성하는 시점에는 반환할 객체의 클래스가 존재하지 않아도 된다.
+## 장점 5. 정적 펙터리 메서드를 작성하는 시점에는 반환할 객체의 클래스가 존재하지 않아도 된다.
 
 다음 예제는 프로젝트 내부에 HelloService의 동작을 구현하는 구현체가 존재하지 않는 상황에서 HelloService 사용하는 예제이다.
 
@@ -164,19 +167,24 @@ public interface HelloService {
 
     String hello();
 }
+```
+
+```java
 public class HelloServiceFactory {
 
     /*
 				ServiceLoader를 통해 외부 라이브러리(jar)에 포함된 구현체를 읽어들여 사용한다.
         즉, 어떤 구현체가 올 지 모르지만 해당 구현체가 따르는 인터페이스 기반으로 사용하는 것이다.
         이는 특정 구현체에 의존하지 않기 때문에(import도 하지 않음) 유연한 코드이다.
-
      */
     public static Optional<HelloService> getService() {
         ServiceLoader<HelloService> loader = ServiceLoader.load(HelloService.class);
         return loader.findFirst();
     }
 }
+```
+
+```java
 public class HelloMain {
 
     public static void main(String[] args) {
