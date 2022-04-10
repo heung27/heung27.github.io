@@ -173,7 +173,7 @@ public interface HelloService {
 public class HelloServiceFactory {
 
     /*
-				ServiceLoader를 통해 외부 라이브러리(jar)에 포함된 구현체를 읽어들여 사용한다.
+        ServiceLoader를 통해 외부 라이브러리(jar)에 포함된 구현체를 읽어들여 사용한다.
         즉, 어떤 구현체가 올 지 모르지만 해당 구현체가 따르는 인터페이스 기반으로 사용하는 것이다.
         이는 특정 구현체에 의존하지 않기 때문에(import도 하지 않음) 유연한 코드이다.
      */
