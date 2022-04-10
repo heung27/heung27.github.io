@@ -132,6 +132,9 @@ public abstract class Pizza {
         toppings = builder.toppings.clone();
     }
 }
+```
+
+```java
 public class ChicagoPizza extends Pizza {
 
     public enum Size { SMALL, MEDIUM, LARGE }
@@ -161,6 +164,9 @@ public class ChicagoPizza extends Pizza {
         size = builder.size;
     }
 }
+```
+
+```java
 public class HawaiianPizza extends Pizza {
 
     private final boolean pineapple;
@@ -218,3 +224,4 @@ HawaiianPizza hawaiianPizza = new HawaiianPizza.Builder()
 > **공변 반환 타이핑(covariant return typing)** 
 >
 > 하위 클래스의 메서드가 상위 클래스의 메서드가 정의한 반환 타입이 아닌, 그 하위 타입을 반환하는 것을 의미한다.
+
