@@ -6,4 +6,4 @@ categories: [Book, Java]
 tags: [Effective Java, singleton, design pattern]
 ---
 
-.
+.....
