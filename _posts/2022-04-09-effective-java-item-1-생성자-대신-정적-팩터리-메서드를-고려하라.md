@@ -1,9 +1,9 @@
 ---
 layout: post
-title: "[Effective Java] Item 1. 생성자 대신 정적 팩터리 메서드를 고려하라"
+title: "Item 1. 생성자 대신 정적 팩터리 메서드를 고려하라"
 date: 2022-04-09 23:22 +0900
-categories: [Book, Java]
-tags: [Effective Java, static method]
+categories: [Book, Effective Java]
+tags: [Java, Effective Java, static method]
 ---
 
 
@@ -34,7 +34,7 @@ package java.math;
 
 public class BigInteger extends Number implements Comparable<BigInteger> {
 
-			// probablePrime라는 이름을 통해 '값이 소수인 BigInteger를 반환한다'라는 의미를 명확히 한다.
+      // probablePrime라는 이름을 통해 '값이 소수인 BigInteger를 반환한다'라는 의미를 명확히 한다.
 	    public static BigInteger probablePrime(int bitLength, Random rnd) {
 	      if (bitLength < 2)
 	          throw new ArithmeticException("bitLength < 2");
@@ -67,7 +67,7 @@ public class Developer {
 
     private Developer() {}
 
-		// 인스턴스를 미리 만들어 놓고, 이를 재활용 한다.
+    // 인스턴스를 미리 만들어 놓고, 이를 재활용 한다.
     private static final Developer developer = new Developer();
 
     public static Developer getBackEnd() {
@@ -130,8 +130,8 @@ public abstract class EnumSet<E extends Enum<E>> {
         if (universe == null)
             throw new ClassCastException(elementType + " not an enum");
 
-				// 원소가 64개 이하면 원소들을 long 변수 하나로 관리하는 RegularEnumSet 인스턴스를 반환한다.
-				// 65개 이상이면 long 배열로 관리하는 JumboEnumSet의 인스턴스를 반환한다.
+        // 원소가 64개 이하면 원소들을 long 변수 하나로 관리하는 RegularEnumSet 인스턴스를 반환한다.
+        // 65개 이상이면 long 배열로 관리하는 JumboEnumSet의 인스턴스를 반환한다.
         if (universe.length <= 64)
             return new RegularEnumSet<>(elementType, universe);
         else

@@ -1,9 +1,9 @@
 ---
 layout: post
-title: "[Effective Java] Item 2. 생성자에 매개변수가 많다면 빌더를 고려하라"
+title: "Item 2. 생성자에 매개변수가 많다면 빌더를 고려하라"
 date: 2022-04-10 18:03 +0900
-categories: [Book, Java]
-tags: [Effective Java, static method]
+categories: [Book, Effective Java]
+tags: [Java, Effective Java, static method]
 ---
 
 
@@ -21,11 +21,11 @@ tags: [Effective Java, static method]
 ```java
 public class User {
 
-		// 필수 매개변수
+    // 필수 매개변수
     private final String name;
     private final int age;
 
-		// 선택 매개변수
+    // 선택 매개변수
     private final String address;
     private final String phone;
     private final String email;
@@ -124,7 +124,7 @@ public abstract class Pizza {
 
         abstract Pizza build();
 
-				// 하위 클래스는 이 메서드를 재정의하여 this를 반환한다.
+        // 하위 클래스는 이 메서드를 재정의하여 this를 반환한다.
         protected abstract T self();
     }
 
