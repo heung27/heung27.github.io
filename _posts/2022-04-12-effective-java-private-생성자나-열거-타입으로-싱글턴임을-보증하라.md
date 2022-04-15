@@ -10,7 +10,7 @@ tags: [Java, Effective Java, singleton, design pattern]
 
 Effective Java의 세 번째 아이템 "private 생성자나 열거 타입으로 싱글턴임을 보증하라"를 읽고 정리한 내용을 포스팅합니다.
 
-
+<br>
 
 ## 싱글턴(singleton)
 
