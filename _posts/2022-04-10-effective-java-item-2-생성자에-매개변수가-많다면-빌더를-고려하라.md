@@ -3,7 +3,7 @@ layout: post
 title: "Item 2. 생성자에 매개변수가 많다면 빌더를 고려하라"
 date: 2022-04-10 18:03 +0900
 categories: [Book, Effective Java]
-tags: [Java, Effective Java, static method]
+tags: [Java, Effective Java, Constructor, Builder]
 ---
 
 
