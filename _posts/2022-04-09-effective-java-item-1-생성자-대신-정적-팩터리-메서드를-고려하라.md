@@ -271,7 +271,7 @@ public class Developer {
 
 <br>
 
-## Related Posts
+## 4. Related Posts
 
 - 불변 (Item 17)
 - [싱글턴 (Item 3)](https://heung27.github.io/posts/effective-java-private-%EC%83%9D%EC%84%B1%EC%9E%90%EB%82%98-%EC%97%B4%EA%B1%B0-%ED%83%80%EC%9E%85%EC%9C%BC%EB%A1%9C-%EC%8B%B1%EA%B8%80%ED%84%B4%EC%9E%84%EC%9D%84-%EB%B3%B4%EC%A6%9D%ED%95%98%EB%9D%BC/)
