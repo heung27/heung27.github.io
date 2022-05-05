@@ -14,7 +14,7 @@ Effective Java의 여덟 번째 아이템 "finalizer와 cleaner 사용을 피하
 
 ## 0. 들어가며
 
-
+Java는 finalizer와 cleaner라는 두 가지 **객체 소멸자**를 제공합니다. 객체 소멸자란 ~~입니다. 본문에서 finalizer와 cleaner가 무엇이고 어떤 문제점을 가지고 있는지, 그리고 어떤 쓰임새가 있는지 자세히 알아보겠습니다. 
 
 
 
@@ -23,6 +23,72 @@ Effective Java의 여덟 번째 아이템 "finalizer와 cleaner 사용을 피하
 ## 1. finalizer와 cleaner란?
 
 
+
+### finalizer
+
+```java
+public class Room {
+  
+    ...
+
+    @Override
+    protected void finalize() throws Throwable {
+        System.out.println("run finalizer");
+    }
+}
+```
+
+
+
+```java
+new Room();
+System.gc();
+```
+
+
+
+finalizer는 예측할 수 없고, 상황에 따라 위험할 수 있어 일반적으로 불필요합니다. 나름의 쓰임새가 몇 가지 있긴 하지만 기본적으로 쓰지 말아야 합니다. 그래서 Java 9에서는 finalizer를 deprecated API로 지정하고 cleaner를 그 대안으로 소개했습니다. 
+
+
+
+### Cleaner
+
+```java
+public class RoomCleaner {
+
+    private static final Cleaner cleaner = Cleaner.create();
+
+    private static class State implements Runnable {
+        int numJunkPiles;
+
+        State(int numJunkPiles) {
+            this.numJunkPiles = numJunkPiles;
+        }
+
+        @Override
+        public void run() {
+            System.out.println("run cleaner");
+            numJunkPiles = 0;
+        }
+    }
+
+    public RoomCleaner(int numJunkPiles) {
+        State state = new State(numJunkPiles);
+        cleaner.register(this, state);
+    }
+}
+```
+
+
+
+```java
+new Room(99);
+System.gc();
+```
+
+
+
+cleaner은 finalizer 보다 덜 위험하지만 여전히 예측할 수 없고, 느리고, 일반적으로 불필요합니다.
 
 <br>
 
@@ -37,7 +103,7 @@ Effective Java의 여덟 번째 아이템 "finalizer와 cleaner 사용을 피하
 
 <br>
 
-## 3. finalizer와 cleaner가 유효한 경우
+## 3. finalizer와 cleaner의 쓰임새
 
 - 쓰임새 1 - 안전망
 - 쓰임새 2 - 네이티브 피어
