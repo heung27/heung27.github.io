@@ -3,7 +3,7 @@ layout: post
 title: Item 8. finalizer와 cleaner 사용을 피하라
 date: 2022-04-30 14:37 +0900
 categories: [Book, Effective Java]
-tags: [Java, Effective Java, finalizer, cleaner]
+tags: [Java, Effective Java, Finalizer, Cleaner]
 ---
 
 
