@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Item 9. try-finally보다는 try-with-resources를 사용하라 (미완성)
+title: Item 9. try-finally보다는 try-with-resources를 사용하라
 date: 2022-05-11 21:45 +0900
 categories: [Book, Effective Java]
 tags: [Java, Effective Java, try-finally, try-with-resources]
@@ -81,7 +81,7 @@ static void copy(String src, String dst) throws IOException {
 }
 ```
 
-얼핏 보면 문제없어 보입니다. 하지만 finally 블록에서도 예외가 발생할 수 있다는 것을 잊지 말아야 합니다. in.close()에서 예외가 발생하면 out.close()는 실행되지 않습니다. 자원이 닫히지 않는 것이죠. 물론 위의 예제에서는 OutputStream이 안전망으로 finalizer를 사용하기 때문에 finalize 메서드가 호출되어 자원이 닫힐 것입니다. 하지만 finalizer보다는 직접 닫아주는 게 좋겠죠.
+얼핏 보면 문제없어 보입니다. 하지만 finally 블록에서도 예외가 발생할 수 있다는 것을 잊지 말아야 합니다. `in.close()`에서 예외가 발생하면 `out.close()`는 실행되지 않습니다. 자원이 닫히지 않는 것이죠. 물론 위의 예제에서는 OutputStream이 안전망으로 finalizer를 사용하기 때문에 finalize 메서드가 호출되어 자원이 닫힐 것입니다. 하지만 finalizer보다는 직접 닫아주는 게 좋겠죠.
 
 try-finally는 복잡해지는 코드 외에 한 가지 더 문제를 가지고 있습니다. 예외가 try 블록과 finally 블록 모두에서 발생할 수 있다는 것입니다. 예를 들어 try 블록에서 어떤 예외가 발생했고 연쇄적으로 finally 블록에도 예외가 발생했다고 가정하면, try 블록에서 발생한 첫 번째 예외가 finally에서 발생한 두 번째 예외에 가려지게 됩니다. 그러면 스택 추적 내역에 첫 번째 예외에 관한 정보는 남지 않게 되어 실제 시스템에서의 디버깅이 어려워집니다.
 
