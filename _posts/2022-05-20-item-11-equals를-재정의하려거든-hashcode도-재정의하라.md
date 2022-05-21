@@ -3,7 +3,7 @@ layout: post
 title: Item 11. equals를 재정의하려거든 hashCode도 재정의하라
 date: 2022-05-20 17:00 +0900
 categories: [Book, Effective Java]
-tags: [Java, Effective Java, Override, equals]
+tags: [Java, Effective Java, Override, hashCode]
 ---
 
 
