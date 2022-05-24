@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Item 12. toString을 항상 재정의하라 (미완성)
+title: Item 12. toString을 항상 재정의하라
 date: 2022-05-21 11:52 +0900
 categories: [Book, Effective Java]
 tags: [Java, Effective Java, Override, toString]
