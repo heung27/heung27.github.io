@@ -44,6 +44,7 @@ public class PhoneNumber {
         this.areaCode = (short) areaCode;
         this.prefix   = (short) prefix;
         this.lineNum  = (short) lineNum;
+    }
   
     ...
 

@@ -35,12 +35,12 @@ equals를 재정의한 클래스가 hashCode를 재정의하지 않으면 일반
 ```java
 public class PhoneNumber {
 
-    private final short prefix, middle, suffix;
+    private final short areaCode, prefix, lineNum;
 
-    public PhoneNumber(int prefix, int middle, int suffix) {
-        this.prefix = (short) prefix;
-        this.middle   = (short) middle;
-        this.suffix  = (short) suffix;
+    public PhoneNumber(int areaCode, int prefix, int lineNum) {
+        this.areaCode = (short) areaCode;
+        this.prefix   = (short) prefix;
+        this.lineNum  = (short) lineNum;
     }
 
     @Override
@@ -50,7 +50,7 @@ public class PhoneNumber {
         if (!(o instanceof PhoneNumber))
             return false;
         PhoneNumber pn = (PhoneNumber)o;
-        return pn.prefix == prefix && pn.middle == middle && pn.suffix == suffix;
+        return pn.areaCode == areaCode && pn.prefix == prefix && pn.lineNum == lineNum;
     }
 }
 ```
@@ -118,12 +118,12 @@ public int hashCode() {
 ```java
 public class PhoneNumber {
 
-    private final short prefix, middle, suffix;
+    private final short areaCode, prefix, lineNum;
 
-    public PhoneNumber(int prefix, int middle, int suffix) {
-        this.prefix = (short) prefix;
-        this.middle   = (short) middle;
-        this.suffix  = (short) suffix;
+    public PhoneNumber(int areaCode, int prefix, int lineNum) {
+        this.areaCode = (short) areaCode;
+        this.prefix   = (short) prefix;
+        this.lineNum  = (short) lineNum;
     }
 
     @Override
@@ -133,14 +133,14 @@ public class PhoneNumber {
         if (!(o instanceof PhoneNumber))
             return false;
         PhoneNumber pn = (PhoneNumber)o;
-        return pn.prefix == prefix && pn.middle == middle && pn.suffix == suffix;
+        return pn.areaCode == areaCode && pn.prefix == prefix && pn.lineNum == lineNum;
     }
 
     @Override
     public int hashCode() {
-        int result = Short.hashCode(prefix);
-        result = 31 * result + Short.hashCode(middle);
-        result = 31 * result + Short.hashCode(suffix);
+        int result = Short.hashCode(areaCode);
+        result = 31 * result + Short.hashCode(prefix);
+        result = 31 * result + Short.hashCode(lineNum);
         return result;
     }
 }
@@ -177,7 +177,7 @@ private static class PhoneNumberFunnel implements Funnel<PhoneNumber> {
 
   @Override
   public void funnel(PhoneNumber from, PrimitiveSink into) {
-    into.putShort(from.prefix).putShort(from.middle).putShort(from.suffix);
+    into.putShort(from.areaCode).putShort(from.prefix).putShort(from.lineNum);
   }
 }
 ```
@@ -208,9 +208,9 @@ public int hashCode() {
   synchronized (this) {
     int result = hashCode;
     if (result == 0) {
-      result = Short.hashCode(prefix);
-      result = 31 * result + Short.hashCode(middle);
-      result = 31 * result + Short.hashCode(suffix);
+      result = Short.hashCode(areaCode);
+      result = 31 * result + Short.hashCode(prefix);
+      result = 31 * result + Short.hashCode(lineNum);
       this.hashCode = result;
     }
     return result;
