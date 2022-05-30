@@ -104,9 +104,9 @@ public final class CaseInsensitiveString implements Comparable<CaseInsensitiveSt
 }
 ```
 
-**3) compareTo 메서드에서 관계 연산자 <와 >를 사용하는 이전 방식은 거추장스럽고 오류를 유발하니 추천하지 않는다.**
+**3) compareTo 메서드에서 관계 연산자 \<와 \>를 사용하는 이전 방식은 거추장스럽고 오류를 유발하니 추천하지 않는다.**
 
-자바 7 이전에는 정수 기본 타입 필드를 비교할 때 관계 연산자인 <와 >를 사용하라고 권고했습니다. 하지만 이제는 박싱된 기본 타입 클래스에 새로 추가된 정적 메서드인 compare을 사용하는 것을 추천합니다.
+자바 7 이전에는 정수 기본 타입 필드를 비교할 때 관계 연산자인 \<와 \>를 사용하라고 권고했습니다. 하지만 이제는 박싱된 기본 타입 클래스에 새로 추가된 정적 메서드인 compare을 사용하는 것을 추천합니다.
 
 **4) 클래스에 핵심 필드가 여러 개라면 어느 것을 먼저 비교하느냐가 중요해진다.**
 
@@ -219,7 +219,7 @@ static Comparator<Object> hashCodeOrder = Comparator.comparingInt(o -> o.hashCod
 ## 6. 핵심 정리
 
 - 순서를 고려해야 하는 값 클래스를 작성한다면 꼭 Comparable 인터페이스를 구현하자.
-- compareTo 메서드에서 필드의 값을 비교할 때 <와 > 연산자는 쓰지 말아야 한다.
+- compareTo 메서드에서 필드의 값을 비교할 때 \<와 \> 연산자는 쓰지 말아야 한다.
 - 대신 박싱된 기본 타입 클래스가 제공하는 정적 compare 메서드나 Comparator 인터페이스가 제공하는 생성 메서드를 사용하자.
 
 <br>
