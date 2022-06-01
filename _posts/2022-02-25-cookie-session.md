@@ -2,7 +2,7 @@
 layout: post
 title: Cookie & Session
 date: 2022-02-25 23:01 +0900
-categories: [Server, Web]
+categories: [Web]
 tags: [HTTP, Cookie, Session]
 ---
 
