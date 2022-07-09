@@ -1,0 +1,419 @@
+<!DOCTYPE html><html lang="en" ><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta name="generator" content="Jekyll v4.2.2" /><meta property="og:title" content="Stream API - 기본" /><meta property="og:locale" content="en" /><meta name="description" content="Stream API란?" /><meta property="og:description" content="Stream API란?" /><link rel="canonical" href="https://github.com/heung27/posts/stream-api-%EA%B8%B0%EB%B3%B8/" /><meta property="og:url" content="https://github.com/heung27/posts/stream-api-%EA%B8%B0%EB%B3%B8/" /><meta property="og:site_name" content="H’s Tech Blog" /><meta property="og:type" content="article" /><meta property="article:published_time" content="2022-02-23T22:55:00+09:00" /><meta name="twitter:card" content="summary" /><meta property="twitter:title" content="Stream API - 기본" /> <script type="application/ld+json"> {"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2022-04-05T22:52:29+09:00","datePublished":"2022-02-23T22:55:00+09:00","description":"Stream API란?","headline":"Stream API - 기본","mainEntityOfPage":{"@type":"WebPage","@id":"https://github.com/heung27/posts/stream-api-%EA%B8%B0%EB%B3%B8/"},"url":"https://github.com/heung27/posts/stream-api-%EA%B8%B0%EB%B3%B8/"}</script><title>Stream API - 기본 | H's Tech Blog</title><link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicons/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicons/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicons/favicon-16x16.png"><link rel="manifest" href="/assets/img/favicons/site.webmanifest"><link rel="shortcut icon" href="/assets/img/favicons/favicon.ico"><meta name="apple-mobile-web-app-title" content="H's Tech Blog"><meta name="application-name" content="H's Tech Blog"><meta name="msapplication-TileColor" content="#da532c"><meta name="msapplication-config" content="/assets/img/favicons/browserconfig.xml"><meta name="theme-color" content="#ffffff"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"><link rel="dns-prefetch" href="https://fonts.gstatic.com"><link rel="preconnect" href="https://www.google-analytics.com" crossorigin="use-credentials"><link rel="dns-prefetch" href="https://www.google-analytics.com"><link rel="preconnect" href="https://www.googletagmanager.com" crossorigin="anonymous"><link rel="dns-prefetch" href="https://www.googletagmanager.com"><link rel="preconnect" href="https://cdn.jsdelivr.net"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.11.2/css/all.min.css"><link rel="stylesheet" href="/assets/css/style.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@1.0.1/dist/bootstrap-toc.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/magnific-popup@1.1.0/dist/magnific-popup.min.css"> <script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script> <script type="text/javascript"> class ModeToggle { static get MODE_KEY() { return "mode"; } static get MODE_ATTR() { return "data-mode"; } static get DARK_MODE() { return "dark"; } static get LIGHT_MODE() { return "light"; } static get ID() { return "mode-toggle"; } constructor() { if (this.hasMode) { if (this.isDarkMode) { if (!this.isSysDarkPrefer) { this.setDark(); } } else { if (this.isSysDarkPrefer) { this.setLight(); } } } let self = this; /* always follow the system prefers */ this.sysDarkPrefers.addEventListener("change", () => { if (self.hasMode) { if (self.isDarkMode) { if (!self.isSysDarkPrefer) { self.setDark(); } } else { if (self.isSysDarkPrefer) { self.setLight(); } } self.clearMode(); } self.notify(); }); } /* constructor() */ get sysDarkPrefers() { return window.matchMedia("(prefers-color-scheme: dark)"); } get isSysDarkPrefer() { return this.sysDarkPrefers.matches; } get isDarkMode() { return this.mode === ModeToggle.DARK_MODE; } get isLightMode() { return this.mode === ModeToggle.LIGHT_MODE; } get hasMode() { return this.mode != null; } get mode() { return sessionStorage.getItem(ModeToggle.MODE_KEY); } /* get the current mode on screen */ get modeStatus() { if (this.isDarkMode || (!this.hasMode && this.isSysDarkPrefer)) { return ModeToggle.DARK_MODE; } else { return ModeToggle.LIGHT_MODE; } } setDark() { $('html').attr(ModeToggle.MODE_ATTR, ModeToggle.DARK_MODE); sessionStorage.setItem(ModeToggle.MODE_KEY, ModeToggle.DARK_MODE); } setLight() { $('html').attr(ModeToggle.MODE_ATTR, ModeToggle.LIGHT_MODE); sessionStorage.setItem(ModeToggle.MODE_KEY, ModeToggle.LIGHT_MODE); } clearMode() { $('html').removeAttr(ModeToggle.MODE_ATTR); sessionStorage.removeItem(ModeToggle.MODE_KEY); } /* Notify another plugins that the theme mode has changed */ notify() { window.postMessage({ direction: ModeToggle.ID, message: this.modeStatus }, "*"); } } /* ModeToggle */ const toggle = new ModeToggle(); function flipMode() { if (toggle.hasMode) { if (toggle.isSysDarkPrefer) { if (toggle.isLightMode) { toggle.clearMode(); } else { toggle.setLight(); } } else { if (toggle.isDarkMode) { toggle.clearMode(); } else { toggle.setDark(); } } } else { if (toggle.isSysDarkPrefer) { toggle.setLight(); } else { toggle.setDark(); } } toggle.notify(); } /* flipMode() */ </script><body data-spy="scroll" data-target="#toc" data-topbar-visible="true"><div id="sidebar" class="d-flex flex-column align-items-end" lang="en"><div class="profile-wrapper text-center"><div id="avatar"> <a href="/" alt="avatar" class="mx-auto"> <img src="/assets/img/me.jpeg" alt="avatar" onerror="this.style.display='none'"> </a></div><div class="site-title mt-3"> <a href="/">H's Tech Blog</a></div><div class="site-subtitle font-italic">주니어 서버 개발자의 성장기</div></div><ul class="w-100"><li class="nav-item"> <a href="/" class="nav-link"> <i class="fa-fw fas fa-home ml-xl-3 mr-xl-3 unloaded"></i> <span>HOME</span> </a><li class="nav-item"> <a href="/categories/" class="nav-link"> <i class="fa-fw fas fa-stream ml-xl-3 mr-xl-3 unloaded"></i> <span>CATEGORIES</span> </a><li class="nav-item"> <a href="/tags/" class="nav-link"> <i class="fa-fw fas fa-tag ml-xl-3 mr-xl-3 unloaded"></i> <span>TAGS</span> </a><li class="nav-item"> <a href="/archives/" class="nav-link"> <i class="fa-fw fas fa-archive ml-xl-3 mr-xl-3 unloaded"></i> <span>ARCHIVES</span> </a><li class="nav-item"> <a href="/about/" class="nav-link"> <i class="fa-fw fas fa-info-circle ml-xl-3 mr-xl-3 unloaded"></i> <span>ABOUT</span> </a></ul><div class="sidebar-bottom mt-auto d-flex flex-wrap justify-content-center align-items-center"> <button class="mode-toggle btn" aria-label="Switch Mode"> <i class="fas fa-adjust"></i> </button> <span class="icon-border"></span> <a href="https://github.com/heung27" aria-label="github" target="_blank" rel="noopener"> <i class="fab fa-github"></i> </a> <a href="https://twitter.com/" aria-label="twitter" target="_blank" rel="noopener"> <i class="fab fa-twitter"></i> </a> <a href=" javascript:location.href = 'mailto:' + ['wlsgmd1535','naver.com'].join('@')" aria-label="email" > <i class="fas fa-envelope"></i> </a> <a href="/feed.xml" aria-label="rss" > <i class="fas fa-rss"></i> </a></div></div><div id="topbar-wrapper" class="row justify-content-center"><div id="topbar" class="col-11 d-flex h-100 align-items-center justify-content-between"> <span id="breadcrumb"> <span> <a href="/"> Home </a> </span> <span>Stream API - 기본</span> </span> <i id="sidebar-trigger" class="fas fa-bars fa-fw"></i><div id="topbar-title"> Post</div><i id="search-trigger" class="fas fa-search fa-fw"></i> <span id="search-wrapper" class="align-items-center"> <i class="fas fa-search fa-fw"></i> <input class="form-control" id="search-input" type="search" aria-label="search" autocomplete="off" placeholder="Search..."> <i class="fa fa-times-circle fa-fw" id="search-cleaner"></i> </span> <span id="search-cancel" >Cancel</span></div></div><div id="main-wrapper"><div id="main"><div class="row"><div id="core-wrapper" class="col-12 col-lg-11 col-xl-8"><div class="post pl-1 pr-1 pl-sm-2 pr-sm-2 pl-md-4 pr-md-4"><h1 data-toc-skip>Stream API - 기본</h1><div class="post-meta text-muted"><div> By <em> <a href="https://github.com/heung27">Jin Heung An</a> </em></div><div class="d-flex"><div> <span> Posted <em class="timeago" data-ts="1645624500" data-toggle="tooltip" data-placement="bottom" data-tooltip-df="llll" > 2022-02-23 </em> </span> <span> Updated <em class="timeago" data-ts="1649166749" data-toggle="tooltip" data-placement="bottom" data-tooltip-df="llll" > 2022-04-05 </em> </span> <span class="readtime" data-toggle="tooltip" data-placement="bottom" title="4602 words"> <em>25 min</em> read</span></div></div></div><div class="post-content"><h2 id="stream-api란">Stream API란? <a href="#stream-api란" class="anchor"><i class="fas fa-hashtag"></i></a></h2></h2><p>Stream API는 데이터를 추상화하고 처리하는데 자주 사용되는 함수들을 정의해둔 API이며 Java 8에서 추가되었다.</p><p>여기서 데이터를 추상화하였다는 것은 데이터의 종류와 관계없이 같은 방식으로 데이터를 처리할 수 있다는 것을 의미한다.</p><p><br /></p><p>Java 8 이전에는 배열 또는 컬렉션 인스턴스를 다루기 위해 for 또는 while 문을 돌려 요소를 하나씩 꺼내 연산을 수행했다. 이러한 방법은 간단한 경우라면 문제가 되지 않지만 로직이 복잡해질수록 코드의 양도 많아지고 여러 로직이 섞여 가독성도 떨어진다.</p><p>Stream API는 반복 문법을 메서드 내부에 숨긴 ‘내부 반복’을 사용해 이를 보완한다. 또한 배열 또는 컬렉션 인스턴스에 여러 개의 함수를 조합하고 필터링해 가공된 결과를 얻을 수 있다. 즉, 배열과 컬렉션을 함수형으로 처리할 수 있게 되는 것이다.</p><p><br /></p><p>정리하면 다음과 같은 <strong>장점</strong>을 가지고 있다.</p><ul><li>유연하다.<ul><li>데이터를 추상화하고 함수를 조합하는 방식으로 데이터를 처리하기 때문에 변하는 요구사항에 쉽게 대응할 수 있다.</ul><li>가독성이 높다.<ul><li>람다식 또는 메서드 참조를 이용해 간결하고 명확하게 표현할 수 있다.</ul><li>병렬 처리가 쉽다.<ul><li>멀티 스레드 코드를 직접 구현하지 않고 내부 반복을 통해 간단하게 처리할 수 있다.</ul></ul><p><br /></p><h2 id="특징">특징 <a href="#특징" class="anchor"><i class="fas fa-hashtag"></i></a></h2></h2><h3 id="1-데이터-원본을-유지한다">1. 데이터 원본을 유지한다. <a href="#1-데이터-원본을-유지한다" class="anchor"><i class="fas fa-hashtag"></i></a></h3></h3><p>Stream API는 원본 데이터를 조회하여 원본 데이터가 아닌 별도의 요소들로 Stream을 생성한다. 때문에 원본 데이터로부터 읽기만 할 뿐 정렬이나 필터링 등의 작업은 별도의 Stream 요소들에서 처리된다.</p><div class="language-java highlighter-rouge"><div class="code-header"> <span data-label-text="Java"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+</pre><td class="rouge-code"><pre><span class="nc">List</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">list</span> <span class="o">=</span> <span class="nc">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">3</span><span class="o">,</span> <span class="mi">4</span><span class="o">,</span> <span class="mi">5</span><span class="o">);</span>
+
+<span class="nc">List</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">sortedList</span> <span class="o">=</span> <span class="n">list</span><span class="o">.</span><span class="na">stream</span><span class="o">()</span>
+  <span class="o">.</span><span class="na">sorted</span><span class="o">(</span><span class="nc">Comparator</span><span class="o">.</span><span class="na">reverseOrder</span><span class="o">())</span>
+  <span class="o">.</span><span class="na">collect</span><span class="o">(</span><span class="nc">Collectors</span><span class="o">.</span><span class="na">toList</span><span class="o">());</span>
+
+<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">sortedList</span><span class="o">);</span>
+<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">list</span><span class="o">);</span>
+
+<span class="cm">/* 실행 결과
+[5, 4, 3, 2, 1]
+[1, 2, 3, 4, 5]
+*/</span>
+</pre></table></code></div></div><p>Stream을 통해 원본 데이터 <code class="language-plaintext highlighter-rouge">[1, 2, 3, 4, 5]</code>를 정렬하고 sortedList에 저장했다. 실행 결과를 보면 정렬이 잘 수행되었고 원본 데이터는 변경되지 않는 것을 확인할 수 있다.</p><p><br /></p><h3 id="2-일회용이다">2. 일회용이다. <a href="#2-일회용이다" class="anchor"><i class="fas fa-hashtag"></i></a></h3></h3><p>Stream API는 일회용이기 때문에 한번 사용이 끝나면 재사용이 불가능하다.</p><div class="language-java highlighter-rouge"><div class="code-header"> <span data-label-text="Java"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+</pre><td class="rouge-code"><pre><span class="nc">List</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">list</span> <span class="o">=</span> <span class="nc">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">3</span><span class="o">,</span> <span class="mi">4</span><span class="o">,</span> <span class="mi">5</span><span class="o">);</span>
+
+<span class="nc">Stream</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">integerStream</span> <span class="o">=</span> <span class="n">list</span><span class="o">.</span><span class="na">stream</span><span class="o">();</span>
+
+<span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="n">integerStream</span><span class="o">.</span><span class="na">reduce</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="nl">Integer:</span><span class="o">:</span><span class="n">max</span><span class="o">);</span>
+
+<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">result</span><span class="o">);</span>
+<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">integerStream</span><span class="o">.</span><span class="na">reduce</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="nl">Integer:</span><span class="o">:</span><span class="n">max</span><span class="o">));</span>
+
+<span class="cm">/* 실행 결과
+5
+Exception in thread "main" java.lang.IllegalStateException: stream has already been operated upon or closed
+...
+*/</span>
+</pre></table></code></div></div><p>list의 Stream인 integerStream를 통해 list의 최댓값을 추출했다. 그리고 다시 integerStream를 사용해 같은 연산을 수행했다. 실행 결과로 list의 최댓값 5가 출력된 후 IllegalStateException이 발생했다. 이는 integerStream이 이미 사용되고 닫힌 후 재사용하려고 했기 때문이다. 같은 Stream이 필요하다면 다시 생성해 주어야 한다.</p><p><br /></p><h3 id="3-내부-반복을-통해-작업을-처리한다">3. 내부 반복을 통해 작업을 처리한다. <a href="#3-내부-반복을-통해-작업을-처리한다" class="anchor"><i class="fas fa-hashtag"></i></a></h3></h3><p>Stream API에서는 반복 문법을 메서드 내부에 숨겨 내부 반복을 통해 작업을 처리한다. 때문에 보다 간결한 코드의 작성이 가능하다.</p><div class="language-java highlighter-rouge"><div class="code-header"> <span data-label-text="Java"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+</pre><td class="rouge-code"><pre><span class="nc">List</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">list</span> <span class="o">=</span> <span class="nc">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">3</span><span class="o">,</span> <span class="mi">4</span><span class="o">,</span> <span class="mi">5</span><span class="o">);</span>
+
+<span class="n">list</span><span class="o">.</span><span class="na">stream</span><span class="o">().</span><span class="na">forEach</span><span class="o">(</span><span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">::</span><span class="n">println</span><span class="o">);</span>
+
+<span class="cm">/* 실행 결과
+1
+2
+3
+4
+5
+*/</span>
+</pre></table></code></div></div><p>list의 요소들을 내부 반복을 통해 하나씩 출력했다. 이 예제는 아주 단순하기 때문에 기존의 반복문과의 큰 차이를 느낄 수 없을지도 모른다. 하지만 복잡한 로직을 함수 조합과 내부 반복을 통해 간결하게 표현했을 때, 비로소 그 편리함에 희열을 느낄 수 있다. <del>(나는 그렇다)</del></p><p><br /></p><h2 id="사용">사용 <a href="#사용" class="anchor"><i class="fas fa-hashtag"></i></a></h2></h2><p>간단한 예제를 통해 Stream API의 개념과 특징을 알아보았다. 이제 또 다른 예제를 통해 자세한 사용법을 알아보자.</p><p>Stream API의 연산은 크게 세 단계로 나눌 수 있다. Stream을 생성하는 단계, 데이터를 가공하는 단계, 마지막으로 결과 데이터를 만드는 단계가 있다.</p><h3 id="1-생성">1. 생성 <a href="#1-생성" class="anchor"><i class="fas fa-hashtag"></i></a></h3></h3><p>Stream 연산을 하기 위해서는 먼저 Stream 객체를 생성해 주어야 한다. 배열, 컬렉션, 임의의 수, 파일 등 거의 모든 것을 가지고 스트림을 생성할 수 있다.</p><h4 id="11-배열-stream">1.1. 배열 Stream <a href="#11-배열-stream" class="anchor"><i class="fas fa-hashtag"></i></a></h4></h4><p><code class="language-plaintext highlighter-rouge">Stream.of()</code> 또는 <code class="language-plaintext highlighter-rouge">Arrays.stream()</code> 메서드를 사용해 생성한다.</p><div class="language-java highlighter-rouge"><div class="code-header"> <span data-label-text="Java"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre><td class="rouge-code"><pre><span class="nc">String</span><span class="o">[]</span> <span class="n">arr</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">String</span><span class="o">[]</span> <span class="o">{</span><span class="s">"a"</span><span class="o">,</span> <span class="s">"b"</span><span class="o">,</span> <span class="s">"c"</span><span class="o">,</span> <span class="s">"d"</span><span class="o">};</span>
+
+<span class="nc">Stream</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">stringStream1</span> <span class="o">=</span> <span class="nc">Stream</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="n">arr</span><span class="o">);</span>
+<span class="nc">Stream</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">stringStream2</span> <span class="o">=</span> <span class="nc">Arrays</span><span class="o">.</span><span class="na">stream</span><span class="o">(</span><span class="n">arr</span><span class="o">);</span>
+<span class="nc">Stream</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">stringStream3</span> <span class="o">=</span> <span class="nc">Arrays</span><span class="o">.</span><span class="na">stream</span><span class="o">(</span><span class="n">arr</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">3</span><span class="o">);</span> <span class="c1">// ["b", "c"]</span>
+</pre></table></code></div></div><p><br /></p><h4 id="12-컬렉션-stream">1.2. 컬렉션 Stream <a href="#12-컬렉션-stream" class="anchor"><i class="fas fa-hashtag"></i></a></h4></h4><p>Collection 인터페이스에는 default method로 <code class="language-plaintext highlighter-rouge">stream()</code>이 정의되어 있기 때문에, Collection 인터페이스를 구현한 객체들(List, Set 등)은 모두 이 메서드를 이용해 Stream을 생성할 수 있다.</p><div class="language-java highlighter-rouge"><div class="code-header"> <span data-label-text="Java"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre><td class="rouge-code"><pre><span class="nc">List</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">list</span> <span class="o">=</span> <span class="nc">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">(</span><span class="s">"a"</span><span class="o">,</span> <span class="s">"b"</span><span class="o">,</span> <span class="s">"c"</span><span class="o">,</span> <span class="s">"d"</span><span class="o">);</span>
+
+<span class="nc">Stream</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">stringStream</span> <span class="o">=</span> <span class="n">list</span><span class="o">.</span><span class="na">stream</span><span class="o">();</span>
+</pre></table></code></div></div><p><br /></p><h4 id="13-원시-stream">1.3. 원시 Stream <a href="#13-원시-stream" class="anchor"><i class="fas fa-hashtag"></i></a></h4></h4><p>위와 같이 객체를 위한 Stream 외에 원시 타입(int, long, double)을 다루기 위한 특수한 Stream도 있다. <code class="language-plaintext highlighter-rouge">of()</code> 또는 <code class="language-plaintext highlighter-rouge">range()</code> 메서드를 통해 생성한다. <code class="language-plaintext highlighter-rouge">range()</code> 메서드는 값의 범위를 지정한다.</p><div class="language-java highlighter-rouge"><div class="code-header"> <span data-label-text="Java"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre><td class="rouge-code"><pre><span class="nc">IntStream</span> <span class="n">intStream</span> <span class="o">=</span> <span class="nc">IntStream</span><span class="o">.</span><span class="na">range</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">10</span><span class="o">);</span>
+<span class="nc">LongStream</span> <span class="n">longStream</span> <span class="o">=</span> <span class="nc">LongStream</span><span class="o">.</span><span class="na">range</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">10</span><span class="o">);</span>
+</pre></table></code></div></div><p>추가적으로 Java 8의 Random 클래스를 사용하면 난수를 가지는 원시 스트림을 만들 수 있다.</p><div class="language-java highlighter-rouge"><div class="code-header"> <span data-label-text="Java"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre><td class="rouge-code"><pre><span class="nc">LongStream</span> <span class="n">longStream</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Random</span><span class="o">().</span><span class="na">longs</span><span class="o">(</span><span class="mi">5</span><span class="o">);</span> <span class="c1">// 난수 5개 생성</span>
+</pre></table></code></div></div><p><br /></p><h4 id="14-파일-stream">1.4. 파일 Stream <a href="#14-파일-stream" class="anchor"><i class="fas fa-hashtag"></i></a></h4></h4><p>자바 NIO의 Files 클래스의 <code class="language-plaintext highlighter-rouge">lines()</code>을 사용하면 해당 파일의 각 라인을 String 타입의 Stream으로 만들 수 있다.</p><div class="language-java highlighter-rouge"><div class="code-header"> <span data-label-text="Java"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre><td class="rouge-code"><pre><span class="nc">Stream</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">fileStream</span> <span class="o">=</span> <span class="nc">Files</span><span class="o">.</span><span class="na">lines</span><span class="o">(</span>
+  <span class="nc">Paths</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">"test.txt"</span><span class="o">),</span> 
+  <span class="nc">StandardCharsets</span><span class="o">.</span><span class="na">UTF_8</span>
+<span class="o">);</span>
+</pre></table></code></div></div><p><br /></p><h3 id="2-가공">2. 가공 <a href="#2-가공" class="anchor"><i class="fas fa-hashtag"></i></a></h3></h3><p>원본의 데이터를 별도의 데이터로 가공하기 위한 중간 연산의 단계이다. 어떤 객체의 Stream을 원하는 형태로 처리할 수 있으며, 중간 연산의 반환값은 Stream이기 때문에 필요한 만큼 중간 연산을 연결하여 사용할 수 있다.</p><h4 id="21-filter">2.1. filter <a href="#21-filter" class="anchor"><i class="fas fa-hashtag"></i></a></h4></h4><p>Stream에서 조건에 맞지 않는 데이터를 걸려내 데이터를 정제하는 메서드이다. 인자로 boolean을 리턴하는 함수형 인터페이스 Predicate를 받는다.</p><div class="language-java highlighter-rouge"><div class="code-header"> <span data-label-text="Java"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre><td class="rouge-code"><pre><span class="nc">Stream</span><span class="o">&lt;</span><span class="no">T</span><span class="o">&gt;</span> <span class="nf">filter</span><span class="o">(</span><span class="nc">Predicate</span><span class="o">&lt;?</span> <span class="kd">super</span> <span class="no">T</span><span class="o">&gt;</span> <span class="n">predicate</span><span class="o">);</span>
+</pre></table></code></div></div><p>다음은 1부터 5까지의 숫자 리스트에서 3 이상의 숫자를 필터링한 예제이다.</p><div class="language-java highlighter-rouge"><div class="code-header"> <span data-label-text="Java"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+</pre><td class="rouge-code"><pre><span class="nc">List</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">integers</span> <span class="o">=</span> <span class="nc">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">3</span><span class="o">,</span> <span class="mi">4</span><span class="o">,</span> <span class="mi">5</span><span class="o">);</span>
+
+<span class="n">integers</span><span class="o">.</span><span class="na">stream</span><span class="o">()</span>
+  <span class="o">.</span><span class="na">filter</span><span class="o">(</span><span class="n">num</span> <span class="o">-&gt;</span> <span class="n">num</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="o">)</span>
+  <span class="o">.</span><span class="na">forEach</span><span class="o">(</span><span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">::</span><span class="n">println</span><span class="o">);</span>
+
+<span class="cm">/* 실행 결과
+3
+4
+5
+*/</span>
+</pre></table></code></div></div><p><br /></p><h4 id="22-map">2.2. map <a href="#22-map" class="anchor"><i class="fas fa-hashtag"></i></a></h4></h4><p>Stream의 각 요소들에 동일한 연산을 적용하는 메서드이다. 인자로 각 요소들에 적용할 연산인 함수형 인터페이스 Function을 받는다.</p><p>Stream에 들어가 있는 값이 특정 로직을 거친 후 새로운 Stream에 담기게 되는데, 이러한 작업을 매핑(mapping)이라고 한다.</p><div class="language-java highlighter-rouge"><div class="code-header"> <span data-label-text="Java"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre><td class="rouge-code"><pre><span class="o">&lt;</span><span class="no">R</span><span class="o">&gt;</span> <span class="nc">Stream</span><span class="o">&lt;</span><span class="no">R</span><span class="o">&gt;</span> <span class="nf">map</span><span class="o">(</span><span class="nc">Function</span><span class="o">&lt;?</span> <span class="kd">super</span> <span class="no">T</span><span class="o">,</span> <span class="o">?</span> <span class="kd">extends</span> <span class="no">R</span><span class="o">&gt;</span> <span class="n">mapper</span><span class="o">);</span>
+</pre></table></code></div></div><p>다음은 1부터 5까지의 숫자 리스트에서 각 요소에 * 2를 적용한 예제이다.</p><div class="language-java highlighter-rouge"><div class="code-header"> <span data-label-text="Java"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+</pre><td class="rouge-code"><pre><span class="nc">List</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">integers</span> <span class="o">=</span> <span class="nc">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">3</span><span class="o">,</span> <span class="mi">4</span><span class="o">,</span> <span class="mi">5</span><span class="o">);</span>
+
+<span class="n">integers</span><span class="o">.</span><span class="na">stream</span><span class="o">()</span>
+  <span class="o">.</span><span class="na">map</span><span class="o">(</span><span class="n">num</span> <span class="o">-&gt;</span> <span class="n">num</span> <span class="o">*</span> <span class="mi">2</span><span class="o">)</span>
+  <span class="o">.</span><span class="na">forEach</span><span class="o">(</span><span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">::</span><span class="n">println</span><span class="o">);</span>
+
+<span class="cm">/* 실행 결과
+2
+4
+6
+8
+10
+*/</span>
+</pre></table></code></div></div><p><br /></p><h4 id="23-sorted">2.3. sorted <a href="#23-sorted" class="anchor"><i class="fas fa-hashtag"></i></a></h4></h4><p>Stream의 요소들을 정렬하는 메서드이다. 인자로 정렬 방법을 지정하는 함수형 인터페이스 Comparator를 받는다. 인자를 받지 않을 수도 있는데 이때 정렬은 오름차순이 된다.</p><div class="language-java highlighter-rouge"><div class="code-header"> <span data-label-text="Java"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre><td class="rouge-code"><pre><span class="nc">Stream</span><span class="o">&lt;</span><span class="no">T</span><span class="o">&gt;</span> <span class="nf">sorted</span><span class="o">();</span>
+<span class="nc">Stream</span><span class="o">&lt;</span><span class="no">T</span><span class="o">&gt;</span> <span class="nf">sorted</span><span class="o">(</span><span class="nc">Comparator</span><span class="o">&lt;?</span> <span class="kd">super</span> <span class="no">T</span><span class="o">&gt;</span> <span class="n">comparator</span><span class="o">);</span>
+</pre></table></code></div></div><p>다음은 1부터 5까지의 숫자 리스트를 내림차순으로 정렬한 예제이다.</p><div class="language-java highlighter-rouge"><div class="code-header"> <span data-label-text="Java"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+</pre><td class="rouge-code"><pre><span class="nc">List</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">integers</span> <span class="o">=</span> <span class="nc">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">3</span><span class="o">,</span> <span class="mi">4</span><span class="o">,</span> <span class="mi">5</span><span class="o">);</span>
+
+<span class="n">integers</span><span class="o">.</span><span class="na">stream</span><span class="o">()</span>
+  <span class="o">.</span><span class="na">sorted</span><span class="o">(</span><span class="nc">Comparator</span><span class="o">.</span><span class="na">reverseOrder</span><span class="o">())</span>
+  <span class="o">.</span><span class="na">forEach</span><span class="o">(</span><span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">::</span><span class="n">println</span><span class="o">);</span>
+
+<span class="cm">/* 실행 결과
+5
+4
+3
+2
+1
+*/</span>
+</pre></table></code></div></div><p><br /></p><h4 id="24-distinct">2.4. distinct <a href="#24-distinct" class="anchor"><i class="fas fa-hashtag"></i></a></h4></h4><p>Stream의 요소들에 중복된 데이터가 존재하는 경우, 중복을 제거하는 메서드이다.</p><div class="language-java highlighter-rouge"><div class="code-header"> <span data-label-text="Java"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre><td class="rouge-code"><pre><span class="nc">Stream</span><span class="o">&lt;</span><span class="no">T</span><span class="o">&gt;</span> <span class="nf">distinct</span><span class="o">();</span>
+</pre></table></code></div></div><p>다음은 중복된 값을 가지는 숫자 리스트의 중복을 제거한 예제이다.</p><div class="language-java highlighter-rouge"><div class="code-header"> <span data-label-text="Java"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre><td class="rouge-code"><pre><span class="nc">List</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">integers</span> <span class="o">=</span> <span class="nc">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">5</span><span class="o">,</span> <span class="mi">5</span><span class="o">);</span>
+
+<span class="n">integers</span><span class="o">.</span><span class="na">stream</span><span class="o">()</span>
+  <span class="o">.</span><span class="na">distinct</span><span class="o">()</span>
+  <span class="o">.</span><span class="na">forEach</span><span class="o">(</span><span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">::</span><span class="n">println</span><span class="o">);</span>
+
+<span class="cm">/* 실행 결과
+1
+5
+*/</span>
+</pre></table></code></div></div><p>여기서 주의해야 할 점이 하나 있다. distinct는 중복 데이터를 검사하기 위해 Object의 equals 메서드를 사용한다. 때문에 우리가 생성한 클래스를 Stream으로 사용한다고 하면, <code class="language-plaintext highlighter-rouge">equals()</code>와 <code class="language-plaintext highlighter-rouge">hashCode()</code>를 오버라이드 해야만 distinct를 제대로 적용할 수 있다.</p><p><br /></p><h4 id="peek">2.5. peek <a href="#peek" class="anchor"><i class="fas fa-hashtag"></i></a></h4></h4><p>Stream에 영향을 주지 않고 각 요소들에 특정 연산을 수행하는 메서드이다. 인자로 함수형 인터페이스 Consumer를 받는다.</p><p>peek라는 단어가 ‘엿보다’라는 뜻을 가지고 있는 것처럼, peek 함수는 Stream의 각 요소에 특정 연산을 수행할 뿐 결과에 영향을 주지 않는다. 예를 들어 어떤 Stream의 요소들을 중간에 출력해서 확인하고 싶을 때 사용할 수 있다.</p><div class="language-java highlighter-rouge"><div class="code-header"> <span data-label-text="Java"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre><td class="rouge-code"><pre><span class="nc">Stream</span><span class="o">&lt;</span><span class="no">T</span><span class="o">&gt;</span> <span class="nf">peek</span><span class="o">(</span><span class="nc">Consumer</span><span class="o">&lt;?</span> <span class="kd">super</span> <span class="no">T</span><span class="o">&gt;</span> <span class="n">action</span><span class="o">);</span>
+</pre></table></code></div></div><p>다음은 1부터 4를 가지는 IntStream의 합계를 계산하는 예제이다.</p><div class="language-java highlighter-rouge"><div class="code-header"> <span data-label-text="Java"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+</pre><td class="rouge-code"><pre><span class="nc">IntStream</span> <span class="n">intStream</span> <span class="o">=</span> <span class="nc">IntStream</span><span class="o">.</span><span class="na">range</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">5</span><span class="o">);</span> <span class="c1">// 1 ~ 4</span>
+
+<span class="kt">int</span> <span class="n">sum</span> <span class="o">=</span> <span class="n">intStream</span>
+  <span class="o">.</span><span class="na">peek</span><span class="o">(</span><span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">::</span><span class="n">println</span><span class="o">)</span>
+  <span class="o">.</span><span class="na">sum</span><span class="o">();</span>
+
+<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">sum</span><span class="o">);</span>
+
+<span class="cm">/* 실행 결과
+1
+2
+3
+4
+10
+*/</span>
+</pre></table></code></div></div><p>peek 함수를 적용하여 중간값을 출력해 확인하였고, 마지막으로 sum을 적용해 합계를 계산했다.</p><p><br /></p><h4 id="26-maptoobj">2.6. mapToObj <a href="#26-maptoobj" class="anchor"><i class="fas fa-hashtag"></i></a></h4></h4><p>작업을 하다 보면 일반적인 Stream 객체를 원시 Stream으로 바꾸거나 그 반대의 작업이 필요한 경우가 있다. 이를 위해 일반적인 Stream 객체는 <code class="language-plaintext highlighter-rouge">mapToInt(), mapToLong(), mapToDouble()</code>라는 특수한 Mapping 연산을 지원하고 있으며, 그 반대로 원시 객체는 <code class="language-plaintext highlighter-rouge">mapToObj()</code>를 통해 일반적인 Stream 객체로 바꿀 수 있다.</p><div class="language-java highlighter-rouge"><div class="code-header"> <span data-label-text="Java"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre><td class="rouge-code"><pre><span class="nc">List</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">integers</span> <span class="o">=</span> <span class="nc">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">3</span><span class="o">,</span> <span class="mi">4</span><span class="o">,</span> <span class="mi">5</span><span class="o">);</span>
+
+<span class="nc">IntStream</span> <span class="n">intStream1</span> <span class="o">=</span> <span class="n">integers</span><span class="o">.</span><span class="na">stream</span><span class="o">()</span>
+  <span class="o">.</span><span class="na">mapToInt</span><span class="o">(</span><span class="nl">Integer:</span><span class="o">:</span><span class="n">intValue</span><span class="o">);</span> <span class="c1">// List&lt;Integer&gt; =&gt; IntStream</span>
+</pre></table></code></div></div><p><br /></p><h3 id="3-결과">3. 결과 <a href="#3-결과" class="anchor"><i class="fas fa-hashtag"></i></a></h3></h3><p>가공 단계를 거쳐 만들어진 데이터를 최종적으로 원하는 결과 데이터로 만드는 단계이다. Stream의 요소들을 소모하면서 연산이 수행되기 때문에 한 번만 처리 가능하며, 연산이 끝난 뒤 Stream이 닫히게 된다.</p><h4 id="cal">3.1. calculate <a href="#cal" class="anchor"><i class="fas fa-hashtag"></i></a></h4></h4><p>Stream 요소들을 대상으로 최대(max), 최소(min), 평균(average), 합(sum), 개수(count)를 구하는 최종 연산들이 있다.</p><div class="language-java highlighter-rouge"><div class="code-header"> <span data-label-text="Java"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre><td class="rouge-code"><pre><span class="nc">IntStream</span> <span class="n">intStream</span> <span class="o">=</span> <span class="nc">IntStream</span><span class="o">.</span><span class="na">range</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">5</span><span class="o">);</span>
+
+<span class="nc">OptionalInt</span> <span class="n">optionalInt</span> <span class="o">=</span> <span class="n">intStream</span><span class="o">.</span><span class="na">max</span><span class="o">();</span>
+</pre></table></code></div></div><p>위 예제는 max 함수를 사용하여 최댓값을 구했다. 보이는 것처럼 <code class="language-plaintext highlighter-rouge">max()</code>는 반환형이 int가 아닌 OptionalInt이다. Stream 안에 값이 없을 경우 최댓값을 계산할 수 없기 때문에 반환형이 Optional인 것이다.</p><div class="language-java highlighter-rouge"><div class="code-header"> <span data-label-text="Java"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre><td class="rouge-code"><pre><span class="kt">int</span> <span class="n">max</span> <span class="o">=</span> <span class="n">intStream</span><span class="o">.</span><span class="na">max</span><span class="o">().</span><span class="na">orElse</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span> <span class="c1">// 4</span>
+<span class="kt">int</span> <span class="n">min</span> <span class="o">=</span> <span class="n">intStream</span><span class="o">.</span><span class="na">min</span><span class="o">().</span><span class="na">orElse</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span> <span class="c1">// 1</span>
+<span class="kt">double</span> <span class="n">average</span> <span class="o">=</span> <span class="n">intStream</span><span class="o">.</span><span class="na">average</span><span class="o">().</span><span class="na">orElse</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span> <span class="c1">// 2.5</span>
+</pre></table></code></div></div><p><code class="language-plaintext highlighter-rouge">min()</code>와 <code class="language-plaintext highlighter-rouge">average()</code>도 마찬가지로 반환형이 Optional이다. 따라서 원시 타입의 결과를 원한다면 <code class="language-plaintext highlighter-rouge">orElse()</code>와 같은 메서드를 사용해 내부에서 값을 꺼내야 한다.</p><div class="language-java highlighter-rouge"><div class="code-header"> <span data-label-text="Java"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre><td class="rouge-code"><pre><span class="kt">int</span> <span class="n">sum</span> <span class="o">=</span> <span class="n">intStream</span><span class="o">.</span><span class="na">sum</span><span class="o">();</span> <span class="c1">// 10</span>
+<span class="kt">long</span> <span class="n">count</span> <span class="o">=</span> <span class="n">intStream</span><span class="o">.</span><span class="na">count</span><span class="o">();</span> <span class="c1">// 4</span>
+</pre></table></code></div></div><p><code class="language-plaintext highlighter-rouge">sum()</code>과 <code class="language-plaintext highlighter-rouge">count()</code>는 위와 달리 반환형이 원시 타입이다. Stream에 값이 존재하지 않더라도 합과 개수는 0으로 계산할 수 있기 때문이다.</p><p><br /></p><h4 id="32-collect">3.2. collect <a href="#32-collect" class="anchor"><i class="fas fa-hashtag"></i></a></h4></h4><p>Stream의 요소들을 List, Set, Map 등 다른 종류의 결과로 수집하고 싶을 경우 collect를 사용한다.</p><p>collect는 어떻게 Stream의 요소들을 수집할 것인가를 정의한 Collector 타입을 인자로 받아서 처리한다. 일반적으로 List로 Stream의 요소들을 수집하는 경우가 많은데, 이렇게 자주 사용하는 작업은 Collectors 객체에서 static method로 제공하고 있다. 원하는 것이 없는 경우에는 Collector 인터페이스를 직접 구현하여 사용할 수도 있다.</p><div class="language-java highlighter-rouge"><div class="code-header"> <span data-label-text="Java"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre><td class="rouge-code"><pre><span class="nc">List</span><span class="o">&lt;</span><span class="nc">User</span><span class="o">&gt;</span> <span class="n">userList</span> <span class="o">=</span> <span class="nc">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">(</span>
+  <span class="k">new</span> <span class="nf">User</span><span class="o">(</span><span class="s">"heung"</span><span class="o">,</span> <span class="mi">28</span><span class="o">),</span>
+  <span class="k">new</span> <span class="nf">User</span><span class="o">(</span><span class="s">"woneee"</span><span class="o">,</span> <span class="mi">24</span><span class="o">),</span>
+  <span class="k">new</span> <span class="nf">User</span><span class="o">(</span><span class="s">"sun"</span><span class="o">,</span> <span class="mi">28</span><span class="o">),</span>
+  <span class="k">new</span> <span class="nf">User</span><span class="o">(</span><span class="s">"bun"</span><span class="o">,</span> <span class="mi">31</span><span class="o">)</span>
+<span class="o">);</span>
+</pre></table></code></div></div><p>collect에 대한 이해를 돕기 위해 간단한 User class를 만들고 그 List를 준비했다. User는 name(이름), age(나이)를 멤버 변수로 가지고 있다.</p><h5 id="321-collectorstolist">3.2.1. Collectors.toList <a href="#321-collectorstolist" class="anchor"><i class="fas fa-hashtag"></i></a></h5></h5><p>Stream에서 작업한 결과를 List로 반환한다.</p><div class="language-java highlighter-rouge"><div class="code-header"> <span data-label-text="Java"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre><td class="rouge-code"><pre><span class="nc">List</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">nameList</span> <span class="o">=</span> <span class="n">userList</span><span class="o">.</span><span class="na">stream</span><span class="o">()</span>
+  <span class="o">.</span><span class="na">map</span><span class="o">(</span><span class="nl">User:</span><span class="o">:</span><span class="n">getName</span><span class="o">)</span>
+  <span class="o">.</span><span class="na">collect</span><span class="o">(</span><span class="nc">Collectors</span><span class="o">.</span><span class="na">toList</span><span class="o">());</span>
+
+<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">nameList</span><span class="o">);</span>
+
+<span class="cm">/* 실행 결과
+[heung, woneee, sun, bun]
+*/</span>
+</pre></table></code></div></div><p>Stream의 각 요소(User)에서 name을 꺼내 매핑하고, 그 결과를 List로 반환했다.</p><p>만약 해당 결과를 Set 또는 Map으로 반환하고 싶다면 <code class="language-plaintext highlighter-rouge">Collectors.toSet()</code>과 <code class="language-plaintext highlighter-rouge">Collectors.toMap()</code>을 사용하면 된다.</p><h5 id="322-collectorsjoining">3.2.2. Collectors.joining <a href="#322-collectorsjoining" class="anchor"><i class="fas fa-hashtag"></i></a></h5></h5><p>Stream에서 작업한 결과를 1개의 String으로 이어붙인다.</p><p>총 3개의 인자를 받는데, 이를 이용하면 원하는 결과를 간단하게 만들 수 있다.</p><ul><li>delimiter : 각 요소의 중간에 들어가는 구분자<li>prefix : 결과 맨 앞에 붙는 문자<li>suffix : 결과 맨 뒤에 붙는 문자</ul><div class="language-java highlighter-rouge"><div class="code-header"> <span data-label-text="Java"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre><td class="rouge-code"><pre><span class="nc">String</span> <span class="n">listToString</span> <span class="o">=</span> <span class="n">userList</span><span class="o">.</span><span class="na">stream</span><span class="o">()</span>
+  <span class="o">.</span><span class="na">map</span><span class="o">(</span><span class="nl">User:</span><span class="o">:</span><span class="n">getName</span><span class="o">)</span>
+  <span class="o">.</span><span class="na">collect</span><span class="o">(</span><span class="nc">Collectors</span><span class="o">.</span><span class="na">joining</span><span class="o">(</span><span class="s">", "</span><span class="o">,</span> <span class="s">"&lt;"</span><span class="o">,</span> <span class="s">"&gt;"</span><span class="o">));</span>
+
+<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">listToString</span><span class="o">);</span>
+
+<span class="cm">/* 실행 결과
+&lt;heung, woneee, sun, bun&gt;
+*/</span>
+</pre></table></code></div></div><p>User 리스트에서 name을 꺼내고 각 요소들을 하나의 문자열로 이어붙였다.</p><h5 id="323-collectorsaveragingint--collectorssummingint--collectorssummarizingint">3.2.3. Collectors.averagingInt / Collectors.summingInt / Collectors.summarizingInt <a href="#323-collectorsaveragingint--collectorssummingint--collectorssummarizingint" class="anchor"><i class="fas fa-hashtag"></i></a></h5></h5><p>Stream에서 작업한 결과의 평균과 합을 구한다.</p><p>아래의 예제에서는 int 자료형만을 사용했는데 <code class="language-plaintext highlighter-rouge">averaging(), summing(), summarizing()</code> 메서드는 각 원시 타입(int, long, double) 별로 제공된다.</p><div class="language-java highlighter-rouge"><div class="code-header"> <span data-label-text="Java"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+</pre><td class="rouge-code"><pre><span class="nc">Double</span> <span class="n">average</span> <span class="o">=</span> <span class="n">userList</span><span class="o">.</span><span class="na">stream</span><span class="o">()</span>
+  <span class="o">.</span><span class="na">collect</span><span class="o">(</span><span class="nc">Collectors</span><span class="o">.</span><span class="na">averagingInt</span><span class="o">(</span><span class="nl">User:</span><span class="o">:</span><span class="n">getAge</span><span class="o">));</span>
+
+<span class="nc">Integer</span> <span class="n">sum</span> <span class="o">=</span> <span class="n">userList</span><span class="o">.</span><span class="na">stream</span><span class="o">()</span>
+  <span class="o">.</span><span class="na">collect</span><span class="o">(</span><span class="nc">Collectors</span><span class="o">.</span><span class="na">summingInt</span><span class="o">(</span><span class="nl">User:</span><span class="o">:</span><span class="n">getAge</span><span class="o">));</span>
+
+<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">average</span><span class="o">);</span>
+<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">sum</span><span class="o">);</span>
+
+<span class="cm">/* 실행 결과
+27.75
+111
+*/</span>
+</pre></table></code></div></div><p>User 리스트에서 age를 꺼내 평균과 합을 구했다.</p><p>평균과 합은 <a href="#cal">calculate</a>을 사용해서 구할 수 있었다. 이 둘은 사용되는 스트림의 타입이 다른데, calculate는 IntStream과 같은 원시 Stream에서 사용하고 collect는 컬렉션 Stream에서 사용한다.</p><div class="language-java highlighter-rouge"><div class="code-header"> <span data-label-text="Java"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+</pre><td class="rouge-code"><pre><span class="nc">IntSummaryStatistics</span> <span class="n">statistics</span> <span class="o">=</span> <span class="n">userList</span><span class="o">.</span><span class="na">stream</span><span class="o">()</span>
+  <span class="o">.</span><span class="na">collect</span><span class="o">(</span><span class="nc">Collectors</span><span class="o">.</span><span class="na">summarizingInt</span><span class="o">(</span><span class="nl">User:</span><span class="o">:</span><span class="n">getAge</span><span class="o">));</span>
+
+<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">statistics</span><span class="o">);</span>
+
+<span class="cm">/* 실행 결과
+IntSummaryStatistics{count=4, sum=111, min=24, average=27.750000, max=31}
+*/</span>
+</pre></table></code></div></div><p><code class="language-plaintext highlighter-rouge">Collectors.summarizingInt()</code>의 경우에는 IntSummaryStatistics 타입의 객체를 반환한다. 이 안에는 최대, 최소, 합, 평균, 개수 등 계산 값의 모든 정보를 가지고 있다. 따라서 여러 개의 값이 필요하다면 이를 사용해 한꺼번에 계산하는 것이 좋다.</p><h5 id="324-collectorsgroupingby">3.2.4. Collectors.groupingBy <a href="#324-collectorsgroupingby" class="anchor"><i class="fas fa-hashtag"></i></a></h5></h5><p>Stream에서 작업한 결과를 특정 그룹으로 묶는다. 결과는 Map 타입으로 반환되며, 인자로 함수형 인터페이스 Function을 받는다.</p><div class="language-java highlighter-rouge"><div class="code-header"> <span data-label-text="Java"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+</pre><td class="rouge-code"><pre><span class="nc">Map</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">,</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">User</span><span class="o">&gt;&gt;</span> <span class="n">group</span> <span class="o">=</span> <span class="n">userList</span><span class="o">.</span><span class="na">stream</span><span class="o">()</span>
+  <span class="o">.</span><span class="na">collect</span><span class="o">(</span><span class="nc">Collectors</span><span class="o">.</span><span class="na">groupingBy</span><span class="o">(</span><span class="nl">User:</span><span class="o">:</span><span class="n">getAge</span><span class="o">));</span>
+
+<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">group</span><span class="o">);</span>
+
+<span class="cm">/* 실행 결과
+{24=[User{name='woneee', age=24}], 28=[User{name='heung', age=28}, User{name='sun', age=28}], 31=[User{name='bun', age=31}]}
+*/</span>
+</pre></table></code></div></div><p>User 리스트에서 age를 꺼내 나이를 기준으로 그룹을 나눴다. 준비된 데이터로는 28살이 두 명, 24살과 31살이 각 한 명씩 존재한다.</p><h5 id="325-collectorspartitioningby">3.2.5. Collectors.partitioningBy <a href="#325-collectorspartitioningby" class="anchor"><i class="fas fa-hashtag"></i></a></h5></h5><p>Stream에서 작업한 결과를 특정 기준으로 나눈다. 결과는 Map 타입으로 반환되며, 인자로 함수형 인터페이스 Predicate를 받는다.</p><p>위의 <code class="language-plaintext highlighter-rouge">Collectors.groupingBy()</code>은 여러 그룹으로 나눌 수 있지만, <code class="language-plaintext highlighter-rouge">Collectors.partitioningBy()</code>는 true 또는 false로 나뉘게 된다.</p><div class="language-java highlighter-rouge"><div class="code-header"> <span data-label-text="Java"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre><td class="rouge-code"><pre><span class="nc">Map</span><span class="o">&lt;</span><span class="nc">Boolean</span><span class="o">,</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">User</span><span class="o">&gt;&gt;</span> <span class="n">partition</span> <span class="o">=</span> <span class="n">userList</span><span class="o">.</span><span class="na">stream</span><span class="o">()</span>
+  <span class="o">.</span><span class="na">collect</span><span class="o">(</span><span class="nc">Collectors</span><span class="o">.</span><span class="na">partitioningBy</span><span class="o">(</span><span class="n">user</span> <span class="o">-&gt;</span> <span class="n">user</span><span class="o">.</span><span class="na">getAge</span><span class="o">()</span> <span class="o">&gt;</span> <span class="mi">25</span><span class="o">));</span>
+
+<span class="cm">/* 실행 결과
+{false=[User{name='woneee', age=24}], true=[User{name='heung', age=28}, User{name='sun', age=28}, User{name='bun', age=31}]}
+*/</span>
+</pre></table></code></div></div><p>User 리스트에서 25살 이상인 사람과 그렇지 않은 사람을 나눴다. key 값을 보면 ture 또는 false 두 가지인 것을 확인할 수 있다.</p><h5 id="326-collectorscollectingandthen">3.2.6. Collectors.collectingAndThen <a href="#326-collectorscollectingandthen" class="anchor"><i class="fas fa-hashtag"></i></a></h5></h5><p>Stream에서 작업한 결과를 특정 타입으로 collect한 이후에 추가 작업을 지정한다. 첫 번째 인자로 Collectors를 받아 결과를 만들고, 두 번째 인자로 함수형 인터페이스 Function을 받아 추가 작업을 처리한다.</p><div class="language-java highlighter-rouge"><div class="code-header"> <span data-label-text="Java"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre><td class="rouge-code"><pre><span class="nc">Set</span><span class="o">&lt;</span><span class="nc">User</span><span class="o">&gt;</span> <span class="n">unmodifiableSet</span> <span class="o">=</span> <span class="n">userList</span><span class="o">.</span><span class="na">stream</span><span class="o">()</span>
+  <span class="o">.</span><span class="na">collect</span><span class="o">(</span><span class="nc">Collectors</span><span class="o">.</span><span class="na">collectingAndThen</span><span class="o">(</span>
+    <span class="nc">Collectors</span><span class="o">.</span><span class="na">toSet</span><span class="o">(),</span>
+    <span class="nl">Collections:</span><span class="o">:</span><span class="n">unmodifiableSet</span>
+  <span class="o">));</span>
+
+<span class="cm">/* 실행 결과
+[User{name='bun', age=31}, User{name='heung', age=28}, User{name='woneee', age=24}, User{name='sun', age=28}]
+*/</span>
+</pre></table></code></div></div><p>User 리스트를 Set 타입으로 collect하고 추가 작업으로 일반적인 Set을 수정 불가능한 Set으로 변환했다.</p><p><br /></p><h4 id="33-match">3.3. match <a href="#33-match" class="anchor"><i class="fas fa-hashtag"></i></a></h4></h4><p>Stream에서 작업한 결과가 특정 조건을 만족하는지 검사한다. 인자로 함수형 인터페이스 Predicate를 받아 검사 조건으로 사용한다.</p><p>다음과 같은 세 가지 메서드가 있다.</p><ul><li>anyMatch : 하나라도 조건을 만족하는 요소가 있는지<li>allMatch : 모든 요소가 조건을 만족하는지<li>noneMatch : 모든 요소가 조건을 만족하지 않는지</ul><div class="language-java highlighter-rouge"><div class="code-header"> <span data-label-text="Java"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre><td class="rouge-code"><pre><span class="nc">List</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">integers</span> <span class="o">=</span> <span class="nc">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="mi">4</span><span class="o">,</span> <span class="mi">6</span><span class="o">,</span> <span class="mi">8</span><span class="o">);</span>
+
+<span class="kt">boolean</span> <span class="n">anyMatch</span> <span class="o">=</span> <span class="n">integers</span><span class="o">.</span><span class="na">stream</span><span class="o">().</span><span class="na">anyMatch</span><span class="o">(</span><span class="n">num</span> <span class="o">-&gt;</span> <span class="n">num</span> <span class="o">==</span> <span class="mi">2</span><span class="o">);</span> <span class="c1">// true</span>
+<span class="kt">boolean</span> <span class="n">allMatch</span> <span class="o">=</span> <span class="n">integers</span><span class="o">.</span><span class="na">stream</span><span class="o">().</span><span class="na">allMatch</span><span class="o">(</span><span class="n">num</span> <span class="o">-&gt;</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="o">);</span> <span class="c1">// true</span>
+<span class="kt">boolean</span> <span class="n">noneMatch</span> <span class="o">=</span> <span class="n">integers</span><span class="o">.</span><span class="na">stream</span><span class="o">().</span><span class="na">noneMatch</span><span class="o">(</span><span class="n">num</span> <span class="o">-&gt;</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">1</span><span class="o">);</span> <span class="c1">// true</span>
+</pre></table></code></div></div><p><code class="language-plaintext highlighter-rouge">anyMatch()</code>를 통해 Stream 요소에 2가 존재하는지, <code class="language-plaintext highlighter-rouge">allMatch()</code>를 통해 모든 요소가 2의 배수인지, <code class="language-plaintext highlighter-rouge">noneMatch()</code>를 통해 모든 요소가 홀수가 아닌지 검사했다. 결과는 모두 true를 반환한다.</p><p><br /></p><h4 id="34-foreach">3.4. forEach <a href="#34-foreach" class="anchor"><i class="fas fa-hashtag"></i></a></h4></h4><p>Stream에서 작업한 결과의 모든 요소에 특정 연산을 수행한다. 보통 <code class="language-plaintext highlighter-rouge">System.out.println()</code>을 넘겨 최종 결과를 출력하는 용도로 사용한다.</p><p>앞의 가공 파트에서 살펴본 <a href="#peek">peek</a>와는 중간 작업과 최종 작업이라는 차이가 있다.</p><div class="language-java highlighter-rouge"><div class="code-header"> <span data-label-text="Java"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre><td class="rouge-code"><pre><span class="nc">List</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">integers</span> <span class="o">=</span> <span class="nc">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">3</span><span class="o">,</span> <span class="mi">4</span><span class="o">,</span> <span class="mi">5</span><span class="o">);</span>
+
+<span class="n">list</span><span class="o">.</span><span class="na">stream</span><span class="o">().</span><span class="na">forEach</span><span class="o">(</span><span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">::</span><span class="n">println</span><span class="o">);</span>
+</pre></table></code></div></div><p><br /></p><p>지금까지 Stream API의 개념과 기본적인 사용법을 알아보았다. 이외에도 제공되는 기능들이 있는데 이를 잘 활용하기 위해서는 더 깊은 이해가 필요하다. 다음 포스팅에서 자세히 다루어 본다.</p><p><br /></p><h2 id="related-posts">Related Posts <a href="#related-posts" class="anchor"><i class="fas fa-hashtag"></i></a></h2></h2><ul><li><a href="https://heung27.github.io/posts/stream-api-%EA%B3%A0%EA%B8%89/">Stream API - 고급</a><li><a href="https://heung27.github.io/posts/optional/">Optional</a><li><a href="https://heung27.github.io/posts/functional-interface/">Functional Interface</a></ul><p><br /></p><h2 id="reference">Reference <a href="#reference" class="anchor"><i class="fas fa-hashtag"></i></a></h2></h2><ul><li><a href="https://mangkyu.tistory.com/112">https://mangkyu.tistory.com/112</a><li><a href="https://futurecreator.github.io/2018/08/26/java-8-streams/">https://futurecreator.github.io/2018/08/26/java-8-streams/</a><li><a href="https://hbase.tistory.com/171">https://hbase.tistory.com/171</a><li><a href="https://12bme.tistory.com/461">https://12bme.tistory.com/461</a><li><a href="https://velog.io/@foeverna/Java-513-%EC%8A%A4%ED%8A%B8%EB%A6%BC-API-Stream-API">https://velog.io/@foeverna/Java-513-%EC%8A%A4%ED%8A%B8%EB%A6%BC-API-Stream-API</a></ul></div><div class="post-tail-wrapper text-muted"><div class="post-meta mb-3"> <i class="far fa-folder-open fa-fw mr-1"></i> <a href='/categories/language/'>Language</a>, <a href='/categories/java/'>Java</a></div><div class="post-tags"> <i class="fa fa-tags fa-fw mr-1"></i> <a href="/tags/java-8/" class="post-tag no-text-decoration" >Java 8</a> <a href="/tags/stream-api/" class="post-tag no-text-decoration" >Stream API</a> <a href="/tags/functional-interface/" class="post-tag no-text-decoration" >Functional Interface</a> <a href="/tags/lambda/" class="post-tag no-text-decoration" >Lambda</a> <a href="/tags/method-reference/" class="post-tag no-text-decoration" >Method Reference</a></div><div class="post-tail-bottom d-flex justify-content-between align-items-center mt-1 pt-1 pb-2"><div class="license-wrapper"></div><div class="share-wrapper"> <span class="share-label text-muted mr-1">Share</span> <span class="share-icons"> <a href="https://twitter.com/intent/tweet?text=Stream API - 기본 - H&#39;s Tech Blog&amp;url=https://github.com/heung27/posts/stream-api-%EA%B8%B0%EB%B3%B8/" data-toggle="tooltip" data-placement="top" title="Twitter" target="_blank" rel="noopener" aria-label="Twitter"> <i class="fa-fw fab fa-twitter"></i> </a> <a href="https://www.facebook.com/sharer/sharer.php?title=Stream API - 기본 - H&#39;s Tech Blog&amp;u=https://github.com/heung27/posts/stream-api-%EA%B8%B0%EB%B3%B8/" data-toggle="tooltip" data-placement="top" title="Facebook" target="_blank" rel="noopener" aria-label="Facebook"> <i class="fa-fw fab fa-facebook-square"></i> </a> <a href="https://t.me/share/url?url=https://github.com/heung27/posts/stream-api-%EA%B8%B0%EB%B3%B8/&amp;text=Stream API - 기본 - H&#39;s Tech Blog" data-toggle="tooltip" data-placement="top" title="Telegram" target="_blank" rel="noopener" aria-label="Telegram"> <i class="fa-fw fab fa-telegram"></i> </a> <i id="copy-link" class="fa-fw fas fa-link small" data-toggle="tooltip" data-placement="top" title="Copy link" data-title-succeed="Link copied successfully!"> </i> </span></div></div></div></div></div><div id="panel-wrapper" class="col-xl-3 pl-2 text-muted"><div class="access"><div id="access-lastmod" class="post"><div class="panel-heading">Recently Updated</div><ul class="post-content pl-0 pb-1 ml-1 mt-2"><li><a href="/posts/item-21-%EC%9D%B8%ED%84%B0%ED%8E%98%EC%9D%B4%EC%8A%A4%EB%8A%94-%EA%B5%AC%ED%98%84%ED%95%98%EB%8A%94-%EC%AA%BD%EC%9D%84-%EC%83%9D%EA%B0%81%ED%95%B4-%EC%84%A4%EA%B3%84%ED%95%98%EB%9D%BC/">Item 21. 인터페이스는 구현하는 쪽을 생각해 설계하라</a><li><a href="/posts/item-20-%EC%B6%94%EC%83%81-%ED%81%B4%EB%9E%98%EC%8A%A4%EB%B3%B4%EB%8B%A4%EB%8A%94-%EC%9D%B8%ED%84%B0%ED%8E%98%EC%9D%B4%EC%8A%A4%EB%A5%BC-%EC%9A%B0%EC%84%A0%ED%95%98%EB%9D%BC/">Item 20. 추상 클래스보다는 인터페이스를 우선하라</a><li><a href="/posts/item-19-%EC%83%81%EC%86%8D%EC%9D%84-%EA%B3%A0%EB%A0%A4%ED%95%B4-%EC%84%A4%EA%B3%84%ED%95%98%EA%B3%A0-%EB%AC%B8%EC%84%9C%ED%99%94%ED%95%98%EB%9D%BC-%EA%B7%B8%EB%9F%AC%EC%A7%80-%EC%95%8A%EC%95%98%EB%8B%A4%EB%A9%B4-%EC%83%81%EC%86%8D%EC%9D%84-%EA%B8%88%EC%A7%80%ED%95%98%EB%9D%BC/">Item 19. 상속을 고려해 설계하고 문서화하라. 그러지 않았다면 상속을 금지하라</a><li><a href="/posts/item-18-%EC%83%81%EC%86%8D%EB%B3%B4%EB%8B%A4%EB%8A%94-%EC%BB%B4%ED%8F%AC%EC%A7%80%EC%85%98%EC%9D%84-%EC%82%AC%EC%9A%A9%ED%95%98%EB%9D%BC/">Item 18. 상속보다는 컴포지션을 사용하라</a><li><a href="/posts/item-17-%EB%B3%80%EA%B2%BD-%EA%B0%80%EB%8A%A5%EC%84%B1%EC%9D%84-%EC%B5%9C%EC%86%8C%ED%99%94%ED%95%98%EB%9D%BC/">Item 17. 변경 가능성을 최소화하라</a></ul></div><div id="access-tags"><div class="panel-heading">Trending Tags</div><div class="d-flex flex-wrap mt-3 mb-1 mr-3"> <a class="post-tag" href="/tags/java/">Java</a> <a class="post-tag" href="/tags/effective-java/">Effective Java</a> <a class="post-tag" href="/tags/java-8/">Java 8</a> <a class="post-tag" href="/tags/override/">Override</a> <a class="post-tag" href="/tags/lambda/">Lambda</a> <a class="post-tag" href="/tags/method-reference/">Method Reference</a> <a class="post-tag" href="/tags/constructor/">Constructor</a> <a class="post-tag" href="/tags/functional-interface/">Functional Interface</a> <a class="post-tag" href="/tags/spring/">Spring</a> <a class="post-tag" href="/tags/interface/">Interface</a></div></div></div><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@1.0.1/dist/bootstrap-toc.min.js"></script><div id="toc-wrapper" class="pl-0 pr-4 mb-5"><div class="panel-heading pl-3 pt-2 mb-2">Contents</div><nav id="toc" data-toggle="toc"></nav></div></div></div><div class="row"><div class="col-12 col-lg-11 col-xl-8"><div id="tail-wrapper" class="pl-1 pr-1 pl-sm-2 pr-sm-2 pl-md-4 pr-md-4"><div id="related-posts" class="mt-5 mb-2 mb-sm-4"><h3 class="pt-2 mt-1 mb-4 ml-1" data-toc-skip>Further Reading</h3><div class="card-deck mb-4"><div class="card"> <a href="/posts/stream-api-%EA%B3%A0%EA%B8%89/"><div class="card-body"> <em class="timeago small" data-ts="1647157800" > 2022-03-13 </em><h3 class="pt-0 mt-1 mb-3" data-toc-skip>Stream API - 고급</h3><div class="text-muted small"><p> 지난번의 기본편에 이어 고급편을 준비했다. 본편에서는 조금 더 복잡한 Stream API 메서드들과 성능, 주의할 점에 대해 자세히 알아본다. 1. Parallel Stream Stream API는 많은 양의 데이터를 처리하는 경우 런타임 성능을 높이기 위해 병렬 스트림(Parallel Stream)을 제공한다. Parallel Stream는 ...</p></div></div></a></div><div class="card"> <a href="/posts/functional-interface/"><div class="card-body"> <em class="timeago small" data-ts="1645966200" > 2022-02-27 </em><h3 class="pt-0 mt-1 mb-3" data-toc-skip>Functional Interface</h3><div class="text-muted small"><p> Java는 함수형 프로그래밍 언어가 아닌 객체지향 언어이기 때문에 함수는 일급 객체가 아니다. 그러나 Java 8에서 추가된 Functional Interface(이하 함수형 인터페이스)를 사용하면 일급 객체처럼 다룰 수 있다. 본문에서 함수형 인터페이스에 대해 자세히 알아보자. 일급 객체(First-class citizen)란? 다른 ...</p></div></div></a></div><div class="card"> <a href="/posts/lambda/"><div class="card-body"> <em class="timeago small" data-ts="1649167080" > 2022-04-05 </em><h3 class="pt-0 mt-1 mb-3" data-toc-skip>Lambda Expression</h3><div class="text-muted small"><p> Java 8부터 도입된 Lambda Expression(이하 람다식)의 개념과 사용 방법을 포스팅합니다. 지난 Stream API, Functional Interface 포스팅에서도 람다식을 언급했습니다. 이처럼 람다식은 다양하게 활용되고 있는데요. 본문에서는 람다식에만 포커스를 맞춰 자세히 알아보겠습니다. 람다식이란? 람다식(Lambda...</p></div></div></a></div></div></div><div class="post-navigation d-flex justify-content-between"> <a href="/posts/optional/" class="btn btn-outline-primary" prompt="Older"><p>Optional</p></a> <a href="/posts/cookie-session/" class="btn btn-outline-primary" prompt="Newer"><p>Cookie & Session</p></a></div></div></div></div><footer class="d-flex w-100 justify-content-center"><div class="d-flex justify-content-between align-items-center text-muted"><div class="footer-left"><p class="mb-0"> © 2022 <a href="https://github.com/heung27">Jin Heung An</a>. <span data-toggle="tooltip" data-placement="top" title="Except where otherwise noted, the blog posts on this site are licensed under the Creative Commons Attribution 4.0 International (CC BY 4.0) License by the author.">Some rights reserved.</span></p></div><div class="footer-right"></div></div></footer></div><div id="search-result-wrapper" class="d-flex justify-content-center unloaded"><div class="col-12 col-sm-11 post-content"><div id="search-hints"><div id="access-tags"><div class="panel-heading">Trending Tags</div><div class="d-flex flex-wrap mt-3 mb-1 mr-3"> <a class="post-tag" href="/tags/java/">Java</a> <a class="post-tag" href="/tags/effective-java/">Effective Java</a> <a class="post-tag" href="/tags/java-8/">Java 8</a> <a class="post-tag" href="/tags/override/">Override</a> <a class="post-tag" href="/tags/lambda/">Lambda</a> <a class="post-tag" href="/tags/method-reference/">Method Reference</a> <a class="post-tag" href="/tags/constructor/">Constructor</a> <a class="post-tag" href="/tags/functional-interface/">Functional Interface</a> <a class="post-tag" href="/tags/spring/">Spring</a> <a class="post-tag" href="/tags/interface/">Interface</a></div></div></div><div id="search-results" class="d-flex flex-wrap justify-content-center text-muted mt-3"></div></div></div></div><div id="mask"></div><a id="back-to-top" href="#" aria-label="back-to-top" class="btn btn-lg btn-box-shadow" role="button"> <i class="fas fa-angle-up"></i> </a> <script src="https://cdn.jsdelivr.net/npm/simple-jekyll-search@1.10.0/dest/simple-jekyll-search.min.js"></script> <script> SimpleJekyllSearch({ searchInput: document.getElementById('search-input'), resultsContainer: document.getElementById('search-results'), json: '/assets/js/data/search.json', searchResultTemplate: '<div class="pl-1 pr-1 pl-sm-2 pr-sm-2 pl-lg-4 pr-lg-4 pl-xl-0 pr-xl-0"> <a href="{url}">{title}</a><div class="post-meta d-flex flex-column flex-sm-row text-muted mt-1 mb-1"> {categories} {tags}</div><p>{snippet}</p></div>', noResultsText: '<p class="mt-5">Oops! No result founds.</p>', templateMiddleware: function(prop, value, template) { if (prop === 'categories') { if (value === '') { return `${value}`; } else { return `<div class="mr-sm-4"><i class="far fa-folder fa-fw"></i>${value}</div>`; } } if (prop === 'tags') { if (value === '') { return `${value}`; } else { return `<div><i class="fa fa-tag fa-fw"></i>${value}</div>`; } } } }); </script> <script src="https://cdn.jsdelivr.net/combine/npm/lozad/dist/lozad.min.js,npm/magnific-popup@1/dist/jquery.magnific-popup.min.js,npm/clipboard@2/dist/clipboard.min.js"></script> <script src="https://cdn.jsdelivr.net/combine/npm/dayjs@1,npm/dayjs@1/locale/en.min.js,npm/dayjs@1/plugin/relativeTime.min.js,npm/dayjs@1/plugin/localizedFormat.min.js"></script> <script defer src="/assets/js/dist/post.min.js"></script> <script src="https://cdn.jsdelivr.net/combine/npm/popper.js@1.16.1,npm/bootstrap@4/dist/js/bootstrap.min.js"></script> <script defer src="/app.js"></script> <script defer src="https://www.googletagmanager.com/gtag/js?id=G-J2QJ5KLVPE"></script> <script> document.addEventListener("DOMContentLoaded", function(event) { window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-J2QJ5KLVPE'); }); </script>
